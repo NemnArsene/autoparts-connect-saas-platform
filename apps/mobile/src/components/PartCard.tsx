@@ -29,7 +29,7 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact }: PartCa
       <View style={[styles.imageContainer, compact && styles.compactImageContainer]}>
         {/* Placeholder image since we don't have SVG gradients easily in RN without react-native-svg */}
         <View style={[styles.placeholderImage, { backgroundColor: theme.colors.elevation.level2 }]}>
-          <Icon name="car-part" size={compact ? 30 : 40} color={theme.colors.onSurfaceVariant} />
+          <Icon name="car" size={compact ? 30 : 40} color={theme.colors.onSurfaceVariant} />
         </View>
         
         {part.isPromo && part.oldPrice && (
@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#fff',
     fontSize: 10,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
   },
   favButton: {
     position: 'absolute',
@@ -148,12 +148,12 @@ const styles = StyleSheet.create({
   },
   brand: {
     fontSize: 10,
-    fontWeight: '700',
+    fontFamily: 'Inter-Bold',
     textTransform: 'uppercase',
   },
   title: {
     fontSize: 13,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
     marginTop: 2,
     minHeight: 36,
   },
@@ -165,6 +165,7 @@ const styles = StyleSheet.create({
   ratingText: {
     fontSize: 10,
     marginLeft: 4,
+    fontFamily: 'Inter-Medium',
   },
   footerRow: {
     flexDirection: 'row',
@@ -174,11 +175,12 @@ const styles = StyleSheet.create({
   },
   price: {
     fontSize: 14,
-    fontWeight: 'bold',
+    fontFamily: 'Inter-Bold',
   },
   oldPrice: {
     fontSize: 10,
     textDecorationLine: 'line-through',
+    fontFamily: 'Inter-Regular',
   },
   addButton: {
     margin: 0,

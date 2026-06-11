@@ -1,5 +1,5 @@
-import { useState, useMemo } from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { useState, useMemo, useEffect } from 'react';
+import { View, ScrollView, StyleSheet, FlatList } from 'react-native';
 import { Text, TextInput, useTheme, Button, IconButton, Chip } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useCartStore, useFavoritesStore, usePartSearch } from '@autoparts/hooks';
@@ -18,6 +18,7 @@ export default function SearchScreen() {
   const [activeCats, setActiveCats] = useState<string[]>([]);
   const [activeBrands, setActiveBrands] = useState<Brand[]>([]);
   const [showFilters, setShowFilters] = useState(false);
+  const [limit, setLimit] = useState(24);
 
   const filters: PartFilters = useMemo(() => ({
     query,
@@ -26,6 +27,14 @@ export default function SearchScreen() {
   }), [query, activeCats, activeBrands]);
 
   const filteredParts = usePartSearch(PARTS, filters);
+
+  const visibleParts = useMemo(() => {
+    return filteredParts.slice(0, limit);
+  }, [filteredParts, limit]);
+
+  useEffect(() => {
+    setLimit(24);
+  }, [query, activeCats, activeBrands]);
 
   const toggleCat = (id: string) => {
     setActiveCats((prev) => prev.includes(id) ? prev.filter((c) => c !== id) : [...prev, id]);
@@ -119,28 +128,35 @@ export default function SearchScreen() {
       </View>
 
       {/* Results List */}
-      <ScrollView contentContainerStyle={styles.resultsContainer}>
-        {filteredParts.length === 0 ? (
+      <FlatList
+        data={visibleParts}
+        keyExtractor={(item) => item.id}
+        numColumns={2}
+        renderItem={({ item }) => (
+          <View style={styles.gridItem}>
+            <PartCard
+              part={item}
+              onPress={() => router.push(`/part/${item.id}`)}
+              isFav={favoriteIds.includes(item.id)}
+              onFav={() => toggleFavorite(item.id)}
+              onAdd={() => addToCart(item, 1)}
+            />
+          </View>
+        )}
+        onEndReached={() => {
+          if (limit < filteredParts.length) {
+            setLimit((prev) => prev + 24);
+          }
+        }}
+        onEndReachedThreshold={0.4}
+        contentContainerStyle={styles.resultsContainer}
+        ListEmptyComponent={
           <View style={styles.emptyState}>
             <Icon name="magnify-close" size={48} color={theme.colors.onSurfaceVariant} />
             <Text style={styles.emptyText}>Aucun résultat trouvé</Text>
           </View>
-        ) : (
-          <View style={styles.grid}>
-            {filteredParts.map((p) => (
-              <View key={p.id} style={styles.gridItem}>
-                <PartCard
-                  part={p}
-                  onPress={() => router.push(`/part/${p.id}`)}
-                  isFav={favoriteIds.includes(p.id)}
-                  onFav={() => toggleFavorite(p.id)}
-                  onAdd={() => addToCart(p, 1)}
-                />
-              </View>
-            ))}
-          </View>
-        )}
-      </ScrollView>
+        }
+      />
     </View>
   );
 }
@@ -153,10 +169,7 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     alignItems: 'center',
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   },
   searchInput: { flex: 1, height: 44, backgroundColor: 'transparent' },
   filterButton: { marginLeft: 8, marginTop: 6 },

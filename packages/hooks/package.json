@@ -20,11 +20,11 @@
   "dependencies": {
     "@autoparts/models": "workspace:*",
     "@autoparts/shared": "workspace:*",
-    "zustand": "^5.0.14"
+    "zustand": "^4.5.7"
   },
   "devDependencies": {
-    "@types/react": "19.2.7",
-    "react": "19.2.6",
+    "@types/react": "~19.1.10",
+    "react": "19.1.0",
     "tsup": "^8.3.0",
     "typescript": "^5.9.3"
   }

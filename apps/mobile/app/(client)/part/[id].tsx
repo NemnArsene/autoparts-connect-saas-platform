@@ -48,7 +48,7 @@ export default function PartDetailScreen() {
             onPress={() => toggleFavorite(part.id)}
           />
           
-          <Icon name="car-part" size={100} color={theme.colors.primary} />
+          <Icon name="car" size={100} color={theme.colors.primary} />
           
           {part.isPromo && part.oldPrice && (
             <View style={[styles.badge, { backgroundColor: theme.colors.error }]}>

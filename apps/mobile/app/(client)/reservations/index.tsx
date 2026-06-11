@@ -1,6 +1,6 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
 import { Text, useTheme, Chip, IconButton } from 'react-native-paper';
-import { useReservationsStore } from '@autoparts/hooks';
+import { useReservationsStore, useAuthStore } from '@autoparts/hooks';
 import { formatPrice } from '@autoparts/models';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { useRouter } from 'expo-router';
@@ -8,7 +8,41 @@ import { useRouter } from 'expo-router';
 export default function ReservationsScreen() {
   const theme = useTheme();
   const router = useRouter();
+  const { user } = useAuthStore();
   const { myReservations } = useReservationsStore();
+
+  // ── Auth Guard ───────────────────────────────────────────────────
+  if (!user) {
+    return (
+      <View style={[styles.authContainer, { backgroundColor: theme.colors.background }]}>
+        <View style={[styles.authCard, { backgroundColor: theme.colors.surface }]}>
+          <Icon name="lock-outline" size={56} color={theme.colors.primary} />
+          <Text style={[styles.authTitle, { color: theme.colors.onSurface }]}>
+            Connexion requise
+          </Text>
+          <Text style={[styles.authSub, { color: theme.colors.onSurfaceVariant }]}>
+            Connectez-vous pour consulter vos réservations et suivre vos commandes.
+          </Text>
+          <TouchableOpacity
+            style={[styles.authBtn, { backgroundColor: theme.colors.primary }]}
+            onPress={() => router.push('/login')}
+            activeOpacity={0.85}
+          >
+            <Text style={styles.authBtnText}>Se connecter</Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={styles.authRegister}
+            onPress={() => router.push('/register')}
+            activeOpacity={0.7}
+          >
+            <Text style={[styles.authRegisterText, { color: theme.colors.primary }]}>
+              Créer un compte gratuit
+            </Text>
+          </TouchableOpacity>
+        </View>
+      </View>
+    );
+  }
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -69,7 +103,7 @@ export default function ReservationsScreen() {
 
               <View style={styles.cardBody}>
                 <View style={[styles.imagePlaceholder, { backgroundColor: theme.colors.elevation.level2 }]}>
-                  <Icon name="car-part" size={24} color={theme.colors.primary} />
+                  <Icon name="car" size={24} color={theme.colors.primary} />
                 </View>
                 <View style={styles.partInfo}>
                   <Text style={styles.partName} numberOfLines={2}>{res.partName}</Text>
@@ -105,16 +139,35 @@ export default function ReservationsScreen() {
 const styles = StyleSheet.create({
   emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   emptyTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 16 },
+  // Auth guard styles
+  authContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
+  authCard: {
+    width: '100%',
+    borderRadius: 24,
+    padding: 32,
+    alignItems: 'center',
+    elevation: 4,
+    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
+  },
+  authTitle: { fontSize: 22, fontWeight: '800', marginTop: 16, marginBottom: 10, letterSpacing: -0.3 },
+  authSub: { fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: 24 },
+  authBtn: {
+    width: '100%',
+    paddingVertical: 15,
+    borderRadius: 16,
+    alignItems: 'center',
+    marginBottom: 12,
+  },
+  authBtnText: { color: 'white', fontSize: 16, fontWeight: '700' },
+  authRegister: { paddingVertical: 6 },
+  authRegisterText: { fontSize: 14, fontWeight: '600' },
   container: { flex: 1 },
   header: {
     paddingTop: 60,
     paddingBottom: 16,
     paddingHorizontal: 20,
     elevation: 2,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
   },
   headerTitle: { fontSize: 24, fontWeight: 'bold' },
   content: { padding: 16, paddingBottom: 40 },
@@ -122,10 +175,7 @@ const styles = StyleSheet.create({
     borderRadius: 16,
     marginBottom: 16,
     elevation: 1,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
+    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
   },
   cardHeader: {
     flexDirection: 'row',

@@ -11,7 +11,7 @@ export default function ProfileScreen() {
 
   const handleLogout = () => {
     logout();
-    router.replace('/(auth)');
+    router.replace('/');
   };
 
   const getInitials = (name?: string) => {
@@ -101,7 +101,7 @@ export default function ProfileScreen() {
           ) : (
             <Button
               mode="contained"
-              onPress={() => router.replace('/(auth)')}
+              onPress={() => router.replace('/')}
               icon="login"
             >
               Se connecter
@@ -135,10 +135,7 @@ const styles = StyleSheet.create({
     marginTop: -40,
     marginBottom: 20,
     elevation: 4,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   },
   profileInfo: { marginLeft: 16, flex: 1 },
   menuSection: {

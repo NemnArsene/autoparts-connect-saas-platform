@@ -6,7 +6,7 @@ import type { User, UserRole } from '@autoparts/models';
 
 interface AuthState {
   user: User | null;
-  login: (email: string, pass: string, role: UserRole) => Promise<void>;
+  login: (email: string, _pass: string, role: UserRole) => Promise<void>;
   logout: () => void;
 }
 
@@ -15,7 +15,7 @@ export const useAuthStore = create<AuthState>()(
     (set) => ({
       user: null,
       
-      login: async (email, pass, role) => {
+      login: async (email, _pass, role) => {
         // Mock login implementation (will be replaced by Auth API Service)
         const mockUser: User = {
           id: `usr-${Math.floor(Math.random() * 1000)}`,

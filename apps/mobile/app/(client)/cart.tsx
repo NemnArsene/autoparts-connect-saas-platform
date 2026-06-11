@@ -44,7 +44,7 @@ export default function CartScreen() {
         {items.map((item) => (
           <View key={item.part.id} style={[styles.cartItem, { backgroundColor: theme.colors.surface, borderColor: theme.colors.outline }]}>
             <View style={[styles.itemImage, { backgroundColor: theme.colors.elevation.level2 }]}>
-              <Icon name="car-part" size={32} color={theme.colors.primary} />
+              <Icon name="car" size={32} color={theme.colors.primary} />
             </View>
             <View style={styles.itemInfo}>
               <Text style={{ fontWeight: 'bold' }} numberOfLines={2}>{item.part.name}</Text>

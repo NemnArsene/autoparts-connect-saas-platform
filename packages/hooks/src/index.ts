@@ -8,3 +8,4 @@ export * from './useNotifications';
 export * from './useToast';
 export * from './usePartSearch';
 export * from './useCheckout';
+export * from './useOnboarding';

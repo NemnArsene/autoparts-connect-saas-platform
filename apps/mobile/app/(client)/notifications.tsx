@@ -7,35 +7,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 export default function NotificationsScreen() {
   const theme = useTheme();
   const router = useRouter();
-  const { unreadCount, markAsRead } = useNotificationsStore();
-
-  // Mock notifications
-  const notifications = [
-    {
-      id: '1',
-      title: 'Commande prête au retrait',
-      message: 'Votre réservation #RES-8924 pour Plaquette de frein Bosch est prête au retrait.',
-      date: 'Aujourd\'hui à 10:30',
-      type: 'order',
-      read: unreadCount === 0,
-    },
-    {
-      id: '2',
-      title: 'Nouveau fournisseur',
-      message: 'PartsAuto CI a ajouté 50 nouvelles pièces compatibles avec votre Toyota Corolla.',
-      date: 'Hier à 14:15',
-      type: 'system',
-      read: true,
-    },
-    {
-      id: '3',
-      title: 'Promo Flash',
-      message: 'Profitez de -20% sur tous les filtres à huile avec le code OIL20.',
-      date: 'Il y a 3 jours',
-      type: 'promo',
-      read: true,
-    }
-  ];
+  const { notifications, readIds, unreadCount, markAsRead, markRead } = useNotificationsStore();
 
   const getIconInfo = (type: string) => {
     switch(type) {
@@ -61,19 +33,27 @@ export default function NotificationsScreen() {
       <ScrollView contentContainerStyle={styles.content}>
         {notifications.map((n, i) => {
           const iconInfo = getIconInfo(n.type);
+          const isRead = readIds.includes(n.id);
           
           return (
             <View key={n.id}>
-              <View style={[styles.notificationItem, !n.read && { backgroundColor: theme.colors.elevation.level1 }]}>
+              <IconButton
+                style={{ position: 'absolute', right: 8, top: 8, zIndex: 1 }}
+                icon={isRead ? 'eye-outline' : 'eye-off-outline'}
+                size={18}
+                onPress={() => markRead(n.id)}
+                iconColor={isRead ? theme.colors.onSurfaceVariant : theme.colors.primary}
+              />
+              <View style={[styles.notificationItem, !isRead && { backgroundColor: theme.colors.elevation.level1 }]}>
                 <View style={[styles.iconBox, { backgroundColor: iconInfo.bg }]}>
                   <Icon name={iconInfo.name} size={24} color={iconInfo.color} />
                 </View>
                 <View style={styles.textContainer}>
-                  <Text style={[styles.title, !n.read && { fontWeight: 'bold' }]}>{n.title}</Text>
+                  <Text style={[styles.title, !isRead && { fontWeight: 'bold' }]}>{n.title}</Text>
                   <Text style={styles.message}>{n.message}</Text>
                   <Text style={styles.date}>{n.date}</Text>
                 </View>
-                {!n.read && <View style={[styles.unreadDot, { backgroundColor: theme.colors.primary }]} />}
+                {!isRead && <View style={[styles.unreadDot, { backgroundColor: theme.colors.primary }]} />}
               </View>
               {i < notifications.length - 1 && <Divider />}
             </View>
