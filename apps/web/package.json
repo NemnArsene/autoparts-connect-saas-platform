@@ -10,6 +10,7 @@
     "type-check": "tsc --noEmit"
   },
   "dependencies": {
+    "@autoparts/hooks": "workspace:*",
     "@autoparts/models": "workspace:*",
     "@autoparts/shared": "workspace:*",
     "@autoparts/validators": "workspace:*",

@@ -196,6 +196,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@autoparts/hooks':
+        specifier: workspace:*
+        version: link:../../packages/hooks
       '@autoparts/models':
         specifier: workspace:*
         version: link:../../packages/models
