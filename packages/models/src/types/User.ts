@@ -11,6 +11,8 @@ export interface User {
   phone: string;
   avatar: string;   // initials e.g. "KY"
   role: UserRole;
+  city?: string;
+  address?: string;
 }
 
 export interface AuthCredentials {

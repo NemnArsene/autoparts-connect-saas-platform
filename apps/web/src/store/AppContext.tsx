@@ -17,16 +17,12 @@ import {
 // preserving the exact interface for backward compatibility in apps/web
 // =========================================================
 
-export type AppView = 'client' | 'admin';
 export type ClientPage = 'home' | 'search' | 'reservations' | 'notifications' | 'more' | 'part-detail' | 'cart' | 'checkout' | 'profile' | 'vehicles' | 'history' | 'favorites' | 'settings' | 'support';
 export type AdminPage = 'dashboard' | 'users' | 'suppliers' | 'catalog' | 'stock' | 'reservations' | 'payments' | 'cms' | 'reports' | 'settings' | 'part-detail';
 
 interface CartItem { part: Part; quantity: number; }
 
 interface AppState {
-  view: AppView;
-  setView: (v: AppView) => void;
-
   clientPage: ClientPage;
   setClientPage: (p: ClientPage) => void;
   adminPage: AdminPage;
@@ -79,7 +75,6 @@ const AppContext = createContext<AppState | null>(null);
 
 export function AppProvider({ children }: { children: ReactNode }) {
   // 1. UI Local State (Not persisted, will be replaced by React Router eventually)
-  const [view, setView] = useState<AppView>('client');
   const [clientPage, setClientPage] = useState<ClientPage>('home');
   const [adminPage, setAdminPage] = useState<AdminPage>('dashboard');
   const [selectedPart, setSelectedPart] = useState<Part | null>(null);
@@ -125,7 +120,6 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [toastStore.toast]);
 
   const value: AppState = useMemo(() => ({
-    view, setView,
     clientPage, setClientPage: smartSetClientPage,
     adminPage, setAdminPage,
     selectedPart, setSelectedPart,
@@ -133,11 +127,10 @@ export function AppProvider({ children }: { children: ReactNode }) {
     
     user: authStore.user,
     login: (email) => {
-      authStore.login(email || 'kouame@autoparts.ci', 'password123', 'client');
+      authStore.login(email || 'admin@autoparts.ci', 'password123', 'admin');
     },
     logout: () => {
       authStore.logout();
-      setView('client');
       setClientPage('home');
       toastStore.showToast({ message: 'Déconnexion réussie', type: 'info' });
     },
@@ -180,7 +173,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     pageHistory,
     goBack,
   }), [
-    view, clientPage, adminPage, selectedPart, searchQuery, pageHistory,
+    clientPage, adminPage, selectedPart, searchQuery, pageHistory,
     authStore, cartStore, favStore, resStore, themeStore, toastStore, notifStore,
     toastWrapper
   ]);

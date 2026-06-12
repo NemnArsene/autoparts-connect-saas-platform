@@ -28,40 +28,7 @@ export function Toast() {
   );
 }
 
-// ===================== View Switcher (PWA / Backoffice) =====================
-export function ViewSwitcher() {
-  const { view, setView, setClientPage, setAdminPage } = useApp();
-
-  return (
-    <div className="fixed bottom-24 right-4 z-50 flex flex-col gap-2 md:bottom-6">
-      <div className="card overflow-hidden p-1.5 shadow-2xl shadow-slate-900/20 ring-1 ring-slate-900/5">
-        <div className="mb-1 px-2 pt-1 text-[9px] font-bold uppercase tracking-widest text-slate-400">Apps</div>
-        <div className="flex flex-col gap-1">
-          <button
-            onClick={() => { setView('client'); setClientPage('home'); }}
-            className={`group flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
-              view === 'client' ? 'bg-gradient-to-r from-indigo-600 to-violet-600 text-white shadow-md' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
-            }`}
-            title="Application Client (PWA Mobile)"
-          >
-            <Smartphone className="h-4 w-4" />
-            <span className="hidden sm:inline">PWA Client</span>
-          </button>
-          <button
-            onClick={() => { setView('admin'); setAdminPage('dashboard'); }}
-            className={`group flex items-center gap-2 rounded-lg px-3 py-2 text-xs font-semibold transition ${
-              view === 'admin' ? 'bg-gradient-to-r from-slate-800 to-slate-900 text-white shadow-md' : 'text-slate-600 hover:bg-slate-50 dark:text-slate-300 dark:hover:bg-slate-800'
-            }`}
-            title="Backoffice Admin Desktop"
-          >
-            <LayoutDashboard className="h-4 w-4" />
-            <span className="hidden sm:inline">Backoffice</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  );
-}
+// ===================== View Switcher (PWA / Backoffice) removed =====================
 
 // ===================== Mobile Bottom Navigation (4 + 1) =====================
 export function BottomNav({ onMore }: { onMore?: () => void } = {}) {

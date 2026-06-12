@@ -1,6 +1,7 @@
 import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Text, useTheme, IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Svg, { G, Circle, Path } from 'react-native-svg';
 import { formatPrice } from '@autoparts/models';
 import type { Part } from '@autoparts/models';
 
@@ -11,27 +12,35 @@ interface PartCardProps {
   onFav?: () => void;
   onAdd?: () => void;
   compact?: boolean;
+  fullWidth?: boolean;
 }
 
-export function PartCard({ part, onPress, isFav, onFav, onAdd, compact }: PartCardProps) {
+export function PartCard({ part, onPress, isFav, onFav, onAdd, compact, fullWidth }: PartCardProps) {
   const theme = useTheme();
 
   return (
-    <TouchableOpacity 
-      activeOpacity={0.8} 
+    <TouchableOpacity
+      activeOpacity={0.8}
       onPress={onPress}
       style={[
         styles.card,
         { backgroundColor: theme.colors.surface, borderColor: theme.colors.outline },
-        compact && styles.compactCard
+        compact && styles.compactCard,
+        fullWidth && { width: '100%', marginRight: 0, marginVertical: 4 }
       ]}
     >
       <View style={[styles.imageContainer, compact && styles.compactImageContainer]}>
-        {/* Placeholder image since we don't have SVG gradients easily in RN without react-native-svg */}
-        <View style={[styles.placeholderImage, { backgroundColor: theme.colors.elevation.level2 }]}>
-          <Icon name="car" size={compact ? 30 : 40} color={theme.colors.onSurfaceVariant} />
+        <View style={[styles.placeholderImage, { backgroundColor: '#ea580c' }]}>
+          <Svg viewBox="0 0 100 100" width={56} height={56}>
+            <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
+              <Circle cx="50" cy="50" r="26" />
+              <Circle cx="50" cy="50" r="16" />
+              <Circle cx="50" cy="50" r="6" fill="white" />
+              <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
+            </G>
+          </Svg>
         </View>
-        
+
         {part.isPromo && part.oldPrice && (
           <View style={[styles.badge, { backgroundColor: theme.colors.error }]}>
             <Text style={styles.badgeText}>-{Math.round((1 - part.price / part.oldPrice) * 100)}%</Text>
@@ -42,7 +51,7 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact }: PartCa
             <Text style={styles.badgeText}>Nouveau</Text>
           </View>
         )}
-        
+
         {onFav && (
           <IconButton
             icon={isFav ? "heart" : "heart-outline"}
@@ -53,20 +62,20 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact }: PartCa
           />
         )}
       </View>
-      
+
       <View style={styles.infoContainer}>
         <Text style={[styles.brand, { color: theme.colors.onSurfaceVariant }]}>{part.brand}</Text>
         <Text style={[styles.title, { color: theme.colors.onSurface }]} numberOfLines={2}>
           {part.name}
         </Text>
-        
+
         <View style={styles.ratingRow}>
           <Icon name="star" size={12} color="#f59e0b" />
           <Text style={[styles.ratingText, { color: theme.colors.onSurfaceVariant }]}>
             {part.rating} ({part.reviews})
           </Text>
         </View>
-        
+
         <View style={styles.footerRow}>
           <View>
             <Text style={[styles.price, { color: theme.colors.onSurface }]}>
@@ -78,7 +87,7 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact }: PartCa
               </Text>
             )}
           </View>
-          
+
           {onAdd && (
             <IconButton
               icon="plus"
@@ -110,7 +119,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   imageContainer: {
-    height: 120,
+    height: 140,
     position: 'relative',
   },
   compactImageContainer: {
@@ -121,6 +130,7 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'center',
     alignItems: 'center',
+    overflow: 'hidden',
   },
   badge: {
     position: 'absolute',
@@ -128,7 +138,7 @@ const styles = StyleSheet.create({
     left: 8,
     paddingHorizontal: 6,
     paddingVertical: 2,
-    borderRadius: 4,
+    borderRadius: 8,
   },
   badgeText: {
     color: '#fff',
@@ -141,6 +151,9 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: 'rgba(255,255,255,0.9)',
     margin: 4,
+    borderRadius: 20,
+    width: 32,
+    height: 32,
   },
   infoContainer: {
     padding: 10,

@@ -7,6 +7,7 @@ import { CATEGORIES, VEHICLES, PARTS } from '@autoparts/models';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { PartCard } from '../../src/components/PartCard';
+import { TopHeader } from '../../src/components/TopHeader';
 
 const FEATURED_PARTS = PARTS.filter((p) => p.isNew).slice(0, 8);
 const POPULAR_PARTS = PARTS.filter((p) => p.rating >= 4.5).slice(0, 8);
@@ -31,10 +32,11 @@ export default function HomeScreen() {
   const theme = useTheme();
   const router = useRouter();
   const { user } = useAuthStore();
-  const { addToCart } = useCartStore();
+  const { addToCart, items: cartItems } = useCartStore();
   const { favoriteIds, toggleFavorite } = useFavoritesStore();
 
   const myVehicle = VEHICLES[0];
+  const cartCount = cartItems?.reduce((acc, item) => acc + item.quantity, 0) || 0;
 
   const categoryIcons: Record<string, { color: string, icon: string }> = {
     freinage: { color: '#EF4444', icon: 'octagon-outline' },
@@ -48,24 +50,18 @@ export default function HomeScreen() {
   };
 
   return (
-    <ScrollView style={[styles.container, { backgroundColor: theme.colors.background }]} showsVerticalScrollIndicator={false}>
-
-      {/* Top Header (White) */}
-      <View style={styles.topHeader}>
-        <View style={styles.logoRow}>
+    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
+      <TopHeader 
+        title="System for Reserving" 
+        subtitle="Car Spare Parts (ASPS)" 
+        showBack={false} 
+        leftIcon={
           <View style={styles.logoCircle}>
             <Icon name="snowflake" size={18} color="#fff" />
           </View>
-          <View>
-            <Text style={styles.topHeaderTitle}>System for Reserving</Text>
-            <Text style={styles.topHeaderSub}>Car Spare Parts (ASPS)</Text>
-          </View>
-        </View>
-        <View style={styles.topHeaderActions}>
-          <IconButton icon="weather-night" size={24} iconColor="#4B5563" style={{ margin: 0 }} />
-          <IconButton icon="cart-outline" size={24} iconColor="#4B5563" style={{ margin: 0 }} />
-        </View>
-      </View>
+        }
+      />
+      <ScrollView showsVerticalScrollIndicator={false}>
 
       {/* Main Gradient Header */}
       <View style={styles.headerWrapper}>
@@ -256,7 +252,8 @@ export default function HomeScreen() {
       </View>
 
       <View style={{ height: 40 }} />
-    </ScrollView>
+      </ScrollView>
+    </View>
   );
 }
 
@@ -266,39 +263,9 @@ const styles = StyleSheet.create({
   },
   topHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingTop: Platform.OS === 'ios' ? 35 : 10,
-    paddingBottom: 12,
-    backgroundColor: '#fff',
-  },
-  logoRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoCircle: {
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#9333EA',
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: 8,
-  },
-  topHeaderTitle: {
-    fontSize: 14,
-    fontFamily: 'Inter-ExtraBold',
-    color: '#111827',
-  },
-  topHeaderSub: {
-    fontSize: 12,
-    color: '#6B7280',
-    fontFamily: 'Inter-SemiBold',
-  },
-  topHeaderActions: {
-    flexDirection: 'row',
-    alignItems: 'center',
   },
   headerWrapper: {
     marginHorizontal: 16,

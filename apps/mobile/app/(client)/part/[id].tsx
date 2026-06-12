@@ -1,147 +1,185 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text, useTheme, Button, IconButton, Chip } from 'react-native-paper';
+import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { Text, Button, Chip } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCartStore, useFavoritesStore } from '@autoparts/hooks';
 import { PARTS, CATEGORIES, formatPrice } from '@autoparts/models';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Svg, { G, Circle, Path } from 'react-native-svg';
+import { TopHeader } from '../../../src/components/TopHeader';
+import { useState } from 'react';
 
 export default function PartDetailScreen() {
   const params = useLocalSearchParams();
   const id = Array.isArray(params.id) ? params.id[0] : params.id;
-  
-  const theme = useTheme();
   const router = useRouter();
-  
   const { addToCart } = useCartStore();
   const { favoriteIds, toggleFavorite } = useFavoritesStore();
+  const [quantity, setQuantity] = useState(1);
 
   const part = PARTS.find((p) => p.id === id);
 
   if (!part) {
     return (
       <View style={styles.errorContainer}>
-        <Text>Pièce introuvable</Text>
+        <Text style={{ fontFamily: 'Inter-Regular' }}>Pièce introuvable</Text>
         <Button onPress={() => router.back()}>Retour</Button>
       </View>
     );
   }
 
   const isFav = favoriteIds.includes(part.id);
-  const cat = CATEGORIES.find((c) => c.id === part.category);
+  const totalPrice = part.price * quantity;
+  const discountPct = part.oldPrice ? Math.round((1 - part.price / part.oldPrice) * 100) : 0;
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <ScrollView contentContainerStyle={{ paddingBottom: 100 }}>
-        {/* Header Image Area */}
-        <View style={[styles.imageArea, { backgroundColor: theme.colors.elevation.level2 }]}>
-          <IconButton
-            icon="arrow-left"
-            size={24}
-            style={styles.backButton}
-            onPress={() => router.back()}
-          />
-          <IconButton
-            icon={isFav ? "heart" : "heart-outline"}
-            iconColor={isFav ? theme.colors.error : theme.colors.onSurface}
-            size={24}
-            style={styles.favButton}
-            onPress={() => toggleFavorite(part.id)}
-          />
-          
-          <Icon name="car" size={100} color={theme.colors.primary} />
-          
+    <View style={styles.container}>
+      <TopHeader title="Détail pièce" />
+
+      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Hero image */}
+        <View style={styles.heroBox}>
+          <Svg viewBox="0 0 100 100" width={120} height={120}>
+            <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
+              <Circle cx="50" cy="50" r="26" />
+              <Circle cx="50" cy="50" r="16" />
+              <Circle cx="50" cy="50" r="6" fill="white" />
+              <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
+            </G>
+          </Svg>
+
           {part.isPromo && part.oldPrice && (
-            <View style={[styles.badge, { backgroundColor: theme.colors.error }]}>
-              <Text style={styles.badgeText}>-{Math.round((1 - part.price / part.oldPrice) * 100)}%</Text>
+            <View style={styles.heroBadge}>
+              <Text style={styles.heroBadgeText}>-{discountPct}%</Text>
             </View>
           )}
+
+          <TouchableOpacity style={styles.favBtn} onPress={() => toggleFavorite(part.id)} activeOpacity={0.7}>
+            <Icon name={isFav ? 'heart' : 'heart-outline'} size={22} color={isFav ? '#ef4444' : '#94a3b8'} />
+          </TouchableOpacity>
         </View>
 
-        {/* Content */}
-        <View style={styles.content}>
-          <Text style={[styles.brand, { color: theme.colors.onSurfaceVariant }]}>
-            {part.brand} • Réf {part.ref}
+        {/* Main Card */}
+        <View style={styles.mainCard}>
+          {/* Reference + Brand */}
+          <Text style={styles.refText}>
+            {part.brand.toUpperCase()} · RÉF {part.ref || `AP-${part.id.toUpperCase()}`}
           </Text>
-          <Text style={styles.title}>{part.name}</Text>
-          
+
+          <Text style={styles.partName}>{part.name}</Text>
+
+          {/* Rating + Stock */}
           <View style={styles.ratingRow}>
             <Icon name="star" size={16} color="#f59e0b" />
-            <Text style={{ fontWeight: 'bold', marginLeft: 4 }}>{part.rating}</Text>
-            <Text style={{ color: theme.colors.onSurfaceVariant, marginHorizontal: 8 }}>•</Text>
-            <Text style={{ color: theme.colors.onSurfaceVariant }}>{part.reviews} avis</Text>
-            <Text style={{ color: theme.colors.onSurfaceVariant, marginHorizontal: 8 }}>•</Text>
-            <Chip compact style={{ backgroundColor: part.inStock ? '#d1fae5' : '#fee2e2' }}>
-              <Text style={{ fontSize: 10, color: part.inStock ? '#065f46' : '#991b1b' }}>
+            <Text style={styles.ratingNum}>{part.rating}</Text>
+            <Text style={styles.ratingDot}>·</Text>
+            <Text style={styles.ratingAvis}>{part.reviews} avis</Text>
+            <Text style={styles.ratingDot}>·</Text>
+            <View style={[styles.stockChip, { backgroundColor: part.inStock ? '#d1fae5' : '#fee2e2' }]}>
+              <Text style={[styles.stockText, { color: part.inStock ? '#059669' : '#dc2626' }]}>
                 {part.inStock ? 'En stock' : 'Rupture'}
               </Text>
-            </Chip>
+            </View>
           </View>
 
+          {/* Price */}
           <View style={styles.priceRow}>
-            <Text style={styles.price}>{formatPrice(part.price)}</Text>
+            <Text style={styles.priceMain}>{formatPrice(part.price)}</Text>
             {part.oldPrice && (
-              <Text style={[styles.oldPrice, { color: theme.colors.onSurfaceVariant }]}>
-                {formatPrice(part.oldPrice)}
-              </Text>
+              <Text style={styles.priceOld}>{formatPrice(part.oldPrice)}</Text>
             )}
           </View>
 
           {/* Trust Features */}
           <View style={styles.trustGrid}>
             {[
-              { icon: 'shield-check', label: `Garantie ${part.warranty}`, color: theme.colors.primary },
+              { icon: 'shield-check', label: `Garantie ${part.warranty || '3 mois'}`, color: '#6366f1' },
               { icon: 'lightning-bolt', label: 'Livraison 24h', color: '#f59e0b' },
-              { icon: 'map-marker', label: part.supplierName, color: theme.colors.secondary },
+              { icon: 'map-marker', label: part.supplierName || 'Auto Pièces Auto', color: '#10b981' },
             ].map((t) => (
-              <View key={t.label} style={[styles.trustItem, { backgroundColor: theme.colors.elevation.level1 }]}>
-                <Icon name={t.icon} size={20} color={t.color} />
+              <View key={t.label} style={styles.trustItem}>
+                <Icon name={t.icon} size={22} color={t.color} />
                 <Text style={styles.trustText}>{t.label}</Text>
               </View>
             ))}
           </View>
+        </View>
 
-          {/* Compatibility */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Compatibilité véhicules</Text>
-            <View style={styles.compatGrid}>
-              {part.compatibleModels.map((m) => (
-                <Chip key={m} style={styles.compatChip} textStyle={{ fontSize: 12 }}>
-                  {m}
-                </Chip>
-              ))}
-            </View>
-          </View>
-
-          {/* Description */}
-          <View style={styles.section}>
-            <Text style={styles.sectionTitle}>Description</Text>
-            <Text style={{ color: theme.colors.onSurfaceVariant, lineHeight: 20 }}>
-              Pièce {part.name.toLowerCase()} de qualité premium compatible avec les véhicules {part.brand} sélectionnés. Testée et certifiée par nos experts. Installation recommandée par un professionnel agréé.
-            </Text>
+        {/* Compatibilité */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Compatibilité véhicules</Text>
+          <View style={styles.compatWrap}>
+            {(part.compatibleModels || []).map((m) => (
+              <View key={m} style={styles.compatChip}>
+                <Text style={styles.compatText}>{m}</Text>
+              </View>
+            ))}
           </View>
         </View>
+
+        {/* Description */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Description</Text>
+          <Text style={styles.descText}>
+            Pièce {part.name.toLowerCase()} de qualité premium compatible avec les véhicules {part.brand} sélectionnés.
+            Testée et certifiée par nos experts. Installation recommandée par un professionnel agréé.
+          </Text>
+        </View>
+
+        {/* Infos grille */}
+        <View style={styles.section}>
+          <View style={styles.infoGrid}>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Référence</Text>
+              <Text style={styles.infoValue}>{part.ref || `AP-${part.id.toUpperCase()}`}</Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Stock disponible</Text>
+              <Text style={styles.infoValue}>{part.inStock ? '30+ unités' : '0 unité'}</Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Catégorie</Text>
+              <Text style={styles.infoValue}>{CATEGORIES.find(c => c.id === part.category)?.name || '-'}</Text>
+            </View>
+            <View style={styles.infoItem}>
+              <Text style={styles.infoLabel}>Marque</Text>
+              <Text style={styles.infoValue}>{part.brand}</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={{ height: 120 }} />
       </ScrollView>
 
-      {/* Footer CTA */}
-      <View style={[styles.footer, { backgroundColor: theme.colors.surface, borderTopColor: theme.colors.outline }]}>
-        <Button
-          mode="outlined"
-          icon="cart-plus"
-          onPress={() => addToCart(part, 1)}
-          style={styles.cartBtn}
-        >
-          Panier
-        </Button>
-        <Button
-          mode="contained"
+      {/* Footer CTA with quantity */}
+      <View style={styles.footer}>
+        <View style={styles.qtyRow}>
+          <TouchableOpacity
+            style={styles.qtyBtn}
+            onPress={() => setQuantity(Math.max(1, quantity - 1))}
+            activeOpacity={0.7}
+          >
+            <Icon name="minus" size={16} color="#64748b" />
+          </TouchableOpacity>
+          <Text style={styles.qtyNum}>{quantity}</Text>
+          <TouchableOpacity
+            style={styles.qtyBtn}
+            onPress={() => setQuantity(quantity + 1)}
+            activeOpacity={0.7}
+          >
+            <Icon name="plus" size={16} color="#64748b" />
+          </TouchableOpacity>
+        </View>
+
+        <TouchableOpacity
+          style={styles.addBtn}
+          activeOpacity={0.85}
           onPress={() => {
-            addToCart(part, 1);
+            addToCart(part, quantity);
             router.push('/cart');
           }}
-          style={styles.buyBtn}
         >
-          Commander
-        </Button>
+          <Text style={styles.addBtnText}>Ajouter au panier</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -149,120 +187,170 @@ export default function PartDetailScreen() {
 
 const styles = StyleSheet.create({
   errorContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  container: { flex: 1 },
-  imageArea: {
-    height: 300,
+  container: { flex: 1, backgroundColor: '#f8fafc' },
+  scrollContent: { paddingBottom: 20 },
+
+  heroBox: {
+    height: 240,
+    backgroundColor: '#ea580c',
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
   },
-  backButton: {
+  heroBadge: {
     position: 'absolute',
-    top: 40,
-    left: 8,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-  },
-  favButton: {
-    position: 'absolute',
-    top: 40,
-    right: 8,
-    backgroundColor: 'rgba(255,255,255,0.8)',
-  },
-  badge: {
-    position: 'absolute',
-    bottom: 16,
+    top: 16,
     left: 16,
-    paddingHorizontal: 8,
+    backgroundColor: '#ef4444',
+    paddingHorizontal: 10,
     paddingVertical: 4,
-    borderRadius: 6,
+    borderRadius: 8,
   },
-  badgeText: {
-    color: '#fff',
-    fontWeight: 'bold',
+  heroBadgeText: { color: '#fff', fontFamily: 'Inter-Bold', fontSize: 13 },
+  favBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    backgroundColor: '#fff',
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
   },
-  content: {
+
+  mainCard: {
+    backgroundColor: '#fff',
+    margin: 16,
+    borderRadius: 20,
     padding: 20,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
   },
-  brand: {
-    fontSize: 12,
-    fontWeight: 'bold',
-    textTransform: 'uppercase',
+  refText: {
+    fontSize: 11,
+    fontFamily: 'Inter-Bold',
+    color: '#6366f1',
+    letterSpacing: 0.5,
+    marginBottom: 6,
   },
-  title: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginTop: 4,
+  partName: {
+    fontSize: 22,
+    fontFamily: 'Inter-ExtraBold',
+    color: '#0f172a',
+    marginBottom: 10,
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: 8,
+    marginBottom: 16,
   },
-  priceRow: {
-    flexDirection: 'row',
-    alignItems: 'flex-end',
-    marginTop: 16,
+  ratingNum: { fontFamily: 'Inter-Bold', fontSize: 14, color: '#0f172a', marginLeft: 4 },
+  ratingDot: { color: '#94a3b8', marginHorizontal: 6 },
+  ratingAvis: { fontFamily: 'Inter-Regular', fontSize: 13, color: '#64748b' },
+  stockChip: {
+    paddingHorizontal: 10,
+    paddingVertical: 3,
+    borderRadius: 12,
   },
-  price: {
-    fontSize: 28,
-    fontWeight: '900',
-  },
-  oldPrice: {
+  stockText: { fontFamily: 'Inter-SemiBold', fontSize: 11 },
+
+  priceRow: { flexDirection: 'row', alignItems: 'flex-end', marginBottom: 20 },
+  priceMain: { fontSize: 30, fontFamily: 'Inter-Black', color: '#0f172a' },
+  priceOld: {
     fontSize: 16,
+    fontFamily: 'Inter-Regular',
+    color: '#94a3b8',
     textDecorationLine: 'line-through',
-    marginLeft: 8,
+    marginLeft: 10,
     marginBottom: 4,
   },
+
   trustGrid: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 20,
+    gap: 8,
   },
   trustItem: {
     flex: 1,
-    alignItems: 'center',
+    backgroundColor: '#f8fafc',
+    borderRadius: 14,
     padding: 12,
-    borderRadius: 12,
-    marginHorizontal: 4,
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
   },
-  trustText: {
-    fontSize: 10,
-    fontWeight: 'bold',
-    marginTop: 4,
-    textAlign: 'center',
-  },
+  trustText: { fontSize: 10, fontFamily: 'Inter-SemiBold', color: '#334155', marginTop: 6, textAlign: 'center' },
+
   section: {
-    marginTop: 24,
+    marginHorizontal: 16,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    marginBottom: 12,
+  sectionTitle: { fontSize: 15, fontFamily: 'Inter-Bold', color: '#0f172a', marginBottom: 12 },
+  compatWrap: { flexDirection: 'row', flexWrap: 'wrap', gap: 8 },
+  compatChip: {
+    backgroundColor: '#ede9fe',
+    paddingHorizontal: 14,
+    paddingVertical: 6,
+    borderRadius: 20,
   },
-  compatGrid: {
+  compatText: { fontFamily: 'Inter-Medium', fontSize: 13, color: '#4f46e5' },
+  descText: { fontFamily: 'Inter-Regular', fontSize: 14, color: '#475569', lineHeight: 22 },
+
+  infoGrid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+    gap: 0,
   },
-  compatChip: {
-    marginRight: 8,
-    marginBottom: 8,
+  infoItem: {
+    width: '50%',
+    paddingVertical: 8,
+    paddingRight: 8,
   },
+  infoLabel: { fontFamily: 'Inter-Regular', fontSize: 12, color: '#94a3b8', marginBottom: 2 },
+  infoValue: { fontFamily: 'Inter-SemiBold', fontSize: 13, color: '#0f172a' },
+
   footer: {
     position: 'absolute',
     bottom: 0,
     left: 0,
     right: 0,
+    backgroundColor: '#fff',
+    padding: 12,
+    paddingBottom: 7,
     flexDirection: 'row',
-    padding: 16,
-    paddingBottom: 32,
+    alignItems: 'center',
+    gap: 10,
     borderTopWidth: 1,
+    borderTopColor: '#f1f5f9',
+    boxShadow: '0 -4px 16px rgba(0,0,0,0.06)',
   },
-  cartBtn: {
+  qtyRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    borderRadius: 12,
+    paddingHorizontal: 4,
+    paddingVertical: 4,
+    backgroundColor: '#f8fafc',
+  },
+  qtyBtn: { padding: 8 },
+  qtyNum: { fontFamily: 'Inter-Bold', fontSize: 16, color: '#0f172a', minWidth: 28, textAlign: 'center' },
+  addBtn: {
     flex: 1,
-    marginRight: 8,
+    backgroundColor: '#6366f1',
+    borderRadius: 14,
+    paddingVertical: 14,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  buyBtn: {
-    flex: 1,
-    marginLeft: 8,
-  },
+  addBtnText: { fontFamily: 'Inter-Bold', fontSize: 15, color: '#fff' },
 });

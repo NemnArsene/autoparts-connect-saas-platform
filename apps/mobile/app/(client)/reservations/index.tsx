@@ -1,218 +1,241 @@
 import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
-import { Text, useTheme, Chip, IconButton } from 'react-native-paper';
+import { Text } from 'react-native-paper';
 import { useReservationsStore, useAuthStore } from '@autoparts/hooks';
 import { formatPrice } from '@autoparts/models';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Svg, { G, Circle, Path } from 'react-native-svg';
 import { useRouter } from 'expo-router';
+import { useState } from 'react';
+import { TopHeader } from '../../../src/components/TopHeader';
 
 export default function ReservationsScreen() {
-  const theme = useTheme();
   const router = useRouter();
   const { user } = useAuthStore();
   const { myReservations } = useReservationsStore();
+  const [activeTab, setActiveTab] = useState('all');
 
-  // ── Auth Guard ───────────────────────────────────────────────────
   if (!user) {
     return (
-      <View style={[styles.authContainer, { backgroundColor: theme.colors.background }]}>
-        <View style={[styles.authCard, { backgroundColor: theme.colors.surface }]}>
-          <Icon name="lock-outline" size={56} color={theme.colors.primary} />
-          <Text style={[styles.authTitle, { color: theme.colors.onSurface }]}>
-            Connexion requise
-          </Text>
-          <Text style={[styles.authSub, { color: theme.colors.onSurfaceVariant }]}>
+      <View style={styles.authContainer}>
+        <View style={styles.authCard}>
+          <Icon name="lock-outline" size={56} color="#6366f1" />
+          <Text style={styles.authTitle}>Connexion requise</Text>
+          <Text style={styles.authSub}>
             Connectez-vous pour consulter vos réservations et suivre vos commandes.
           </Text>
-          <TouchableOpacity
-            style={[styles.authBtn, { backgroundColor: theme.colors.primary }]}
-            onPress={() => router.push('/login')}
-            activeOpacity={0.85}
-          >
+          <TouchableOpacity style={styles.authBtn} onPress={() => router.push('/login')} activeOpacity={0.85}>
             <Text style={styles.authBtnText}>Se connecter</Text>
           </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.authRegister}
-            onPress={() => router.push('/register')}
-            activeOpacity={0.7}
-          >
-            <Text style={[styles.authRegisterText, { color: theme.colors.primary }]}>
-              Créer un compte gratuit
-            </Text>
+          <TouchableOpacity style={styles.authRegister} onPress={() => router.push('/register')} activeOpacity={0.7}>
+            <Text style={styles.authRegisterText}>Créer un compte gratuit</Text>
           </TouchableOpacity>
         </View>
       </View>
     );
   }
 
-  const getStatusColor = (status: string) => {
+  const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'pending': return { bg: '#fef3c7', text: '#d97706' };
-      case 'confirmed': return { bg: '#d1fae5', text: '#059669' };
-      case 'ready': return { bg: '#dbeafe', text: '#2563eb' };
-      case 'completed': return { bg: '#e0e7ff', text: '#4f46e5' };
-      case 'cancelled': return { bg: '#fee2e2', text: '#dc2626' };
-      default: return { bg: '#f3f4f6', text: '#4b5563' };
+      case 'pending':   return { bg: '#fef3c7', text: '#d97706', label: 'En\nattente' };
+      case 'confirmed': return { bg: '#d1fae5', text: '#059669', label: 'Confirmée' };
+      case 'ready':     return { bg: '#dbeafe', text: '#2563eb', label: 'Prêt' };
+      case 'completed': return { bg: '#e0e7ff', text: '#4f46e5', label: 'Terminée' };
+      case 'cancelled': return { bg: '#fee2e2', text: '#dc2626', label: 'Annulée' };
+      default:          return { bg: '#f3f4f6', text: '#4b5563', label: status };
     }
   };
 
-  const getStatusLabel = (status: string) => {
-    switch (status) {
-      case 'pending': return 'En attente';
-      case 'confirmed': return 'Confirmé';
-      case 'ready': return 'Prêt au retrait';
-      case 'completed': return 'Terminé';
-      case 'cancelled': return 'Annulé';
-      default: return status;
-    }
-  };
+  const tabs = [
+    { key: 'all',       label: 'Toutes' },
+    { key: 'pending',   label: 'En attente' },
+    { key: 'confirmed', label: 'Confirmées' },
+    { key: 'completed', label: 'Terminées' },
+  ];
 
-  if (myReservations.length === 0) {
-    return (
-      <View style={[styles.emptyContainer, { backgroundColor: theme.colors.background }]}>
-        <Icon name="clipboard-text-outline" size={64} color={theme.colors.onSurfaceVariant} />
-        <Text style={styles.emptyTitle}>Aucune réservation</Text>
-        <Text style={{ color: theme.colors.onSurfaceVariant, marginTop: 8 }}>
-          Vous n'avez pas encore réservé de pièces.
-        </Text>
-      </View>
-    );
-  }
+  const filtered = activeTab === 'all'
+    ? myReservations
+    : myReservations.filter((r) => r.status === activeTab);
+
+  const getRelativeDate = (dateStr: string) => {
+    if (!dateStr) return '';
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffDays = Math.round((now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24));
+    if (diffDays === 0) return "Réservé Aujourd'hui";
+    if (diffDays === 1) return 'Réservé Hier';
+    if (diffDays < 7)  return `Il y a ${diffDays} jours`;
+    return `Le ${date.toLocaleDateString('fr-FR')}`;
+  };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={[styles.header, { backgroundColor: theme.colors.surface }]}>
-        <Text style={styles.headerTitle}>Mes Réservations</Text>
+    <View style={styles.container}>
+      <TopHeader title="Mes réservations" />
+
+      {/* Status Filter Tabs */}
+      <View style={styles.tabsWrapper}>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.tabsScroll}>
+          {tabs.map((tab) => (
+            <TouchableOpacity
+              key={tab.key}
+              style={[styles.tab, activeTab === tab.key && styles.tabActive]}
+              onPress={() => setActiveTab(tab.key)}
+              activeOpacity={0.7}
+            >
+              <Text style={[styles.tabText, activeTab === tab.key && styles.tabTextActive]}>
+                {tab.label}
+              </Text>
+            </TouchableOpacity>
+          ))}
+        </ScrollView>
       </View>
 
-      <ScrollView contentContainerStyle={styles.content}>
-        {myReservations.map((res) => {
-          const statusColors = getStatusColor(res.status);
-          
-          return (
-            <View key={res.id} style={[styles.card, { backgroundColor: theme.colors.surface }]}>
-              <View style={styles.cardHeader}>
-                <Text style={styles.reference}>{res.reference}</Text>
-                <Chip
-                  compact
-                  style={{ backgroundColor: statusColors.bg }}
-                  textStyle={{ color: statusColors.text, fontSize: 10, fontWeight: 'bold' }}
-                >
-                  {getStatusLabel(res.status)}
-                </Chip>
-              </View>
+      {filtered.length === 0 ? (
+        <View style={styles.emptyContainer}>
+          <Icon name="clipboard-text-outline" size={64} color="#94a3b8" />
+          <Text style={styles.emptyTitle}>Aucune réservation</Text>
+          <Text style={styles.emptySub}>
+            {activeTab === 'all'
+              ? "Vous n'avez pas encore réservé de pièces."
+              : 'Aucune réservation avec ce statut.'}
+          </Text>
+        </View>
+      ) : (
+        <ScrollView contentContainerStyle={styles.content} showsVerticalScrollIndicator={false}>
+          {filtered.map((res) => {
+            const statusInfo = getStatusInfo(res.status);
+            const dateRef = (res as any).createdAt || res.pickupDate;
+            return (
+              <TouchableOpacity key={res.id} style={styles.card} activeOpacity={0.85}>
+                <View style={styles.cardMain}>
+                  {/* SVG Target Image */}
+                  <View style={styles.imgBox}>
+                    <Svg viewBox="0 0 100 100" width={46} height={46}>
+                      <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
+                        <Circle cx="50" cy="50" r="26" />
+                        <Circle cx="50" cy="50" r="16" />
+                        <Circle cx="50" cy="50" r="6" fill="white" />
+                        <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
+                      </G>
+                    </Svg>
+                  </View>
 
-              <View style={styles.cardBody}>
-                <View style={[styles.imagePlaceholder, { backgroundColor: theme.colors.elevation.level2 }]}>
-                  <Icon name="car" size={24} color={theme.colors.primary} />
-                </View>
-                <View style={styles.partInfo}>
-                  <Text style={styles.partName} numberOfLines={2}>{res.partName}</Text>
-                  <Text style={{ fontSize: 12, color: theme.colors.onSurfaceVariant }}>
-                    Qté: {res.quantity} • {res.supplierName}
-                  </Text>
-                </View>
-                <Text style={styles.price}>{formatPrice(res.totalPrice)}</Text>
-              </View>
+                  <View style={styles.cardInfo}>
+                    {/* Title + Status */}
+                    <View style={styles.titleRow}>
+                      <Text style={styles.partName} numberOfLines={1}>{res.partName}</Text>
+                      <View style={[styles.statusBadge, { backgroundColor: statusInfo.bg }]}>
+                        <Text style={[styles.statusText, { color: statusInfo.text }]}>{statusInfo.label}</Text>
+                      </View>
+                    </View>
 
-              <View style={[styles.cardFooter, { borderTopColor: theme.colors.outline }]}>
-                <View style={styles.dateRow}>
-                  <Icon name="calendar-clock" size={16} color={theme.colors.onSurfaceVariant} />
-                  <Text style={{ fontSize: 12, color: theme.colors.onSurfaceVariant, marginLeft: 4 }}>
-                    Retrait prévu : {new Date(res.pickupDate).toLocaleDateString('fr-FR')}
-                  </Text>
+                    <Text style={styles.supplierText}>{res.supplierName}</Text>
+
+                    {/* Reference + Total */}
+                    <View style={styles.metaRow}>
+                      <View>
+                        <Text style={styles.metaKey}>RÉF</Text>
+                        <Text style={styles.metaRef}>{res.reference}</Text>
+                        <Text style={styles.metaDate}>{getRelativeDate(dateRef)}</Text>
+                      </View>
+                      <View style={styles.totalCol}>
+                        <Text style={styles.totalKey}>TOTAL</Text>
+                        <Text style={styles.totalVal}>{formatPrice(res.totalPrice)}</Text>
+                      </View>
+                    </View>
+                  </View>
                 </View>
-                <IconButton
-                  icon="chevron-right"
-                  size={20}
-                  onPress={() => {}}
-                  style={{ margin: 0 }}
-                />
-              </View>
-            </View>
-          );
-        })}
-      </ScrollView>
+              </TouchableOpacity>
+            );
+          })}
+          <View style={{ height: 60 }} />
+        </ScrollView>
+      )}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center' },
-  emptyTitle: { fontSize: 20, fontWeight: 'bold', marginTop: 16 },
-  // Auth guard styles
-  authContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24 },
-  authCard: {
-    width: '100%',
-    borderRadius: 24,
-    padding: 32,
-    alignItems: 'center',
-    elevation: 4,
-    boxShadow: '0px 4px 16px rgba(0, 0, 0, 0.08)',
-  },
-  authTitle: { fontSize: 22, fontWeight: '800', marginTop: 16, marginBottom: 10, letterSpacing: -0.3 },
-  authSub: { fontSize: 14, textAlign: 'center', lineHeight: 20, marginBottom: 24 },
-  authBtn: {
-    width: '100%',
-    paddingVertical: 15,
-    borderRadius: 16,
-    alignItems: 'center',
-    marginBottom: 12,
-  },
-  authBtnText: { color: 'white', fontSize: 16, fontWeight: '700' },
-  authRegister: { paddingVertical: 6 },
-  authRegisterText: { fontSize: 14, fontWeight: '600' },
-  container: { flex: 1 },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 16,
-    paddingHorizontal: 20,
-    elevation: 2,
-    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
-  },
-  headerTitle: { fontSize: 24, fontWeight: 'bold' },
-  content: { padding: 16, paddingBottom: 40 },
-  card: {
-    borderRadius: 16,
-    marginBottom: 16,
-    elevation: 1,
-    boxShadow: '0 1px 2px rgba(0,0,0,0.1)',
-  },
-  cardHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: 16,
+  container: { flex: 1, backgroundColor: '#f8fafc' },
+
+  // Tabs
+  tabsWrapper: {
+    backgroundColor: '#fff',
     paddingBottom: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: '#f1f5f9',
   },
-  reference: {
-    fontSize: 14,
-    fontWeight: 'bold',
-    fontFamily: 'monospace',
-  },
-  cardBody: {
-    flexDirection: 'row',
+  tabsScroll: {
     paddingHorizontal: 16,
-    paddingBottom: 16,
-    alignItems: 'center',
-  },
-  imagePlaceholder: {
-    width: 48,
-    height: 48,
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: 12,
-  },
-  partInfo: { flex: 1 },
-  partName: { fontWeight: 'bold', fontSize: 14, marginBottom: 4 },
-  price: { fontWeight: '900', fontSize: 16 },
-  cardFooter: {
+    paddingTop: 12,
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+  },
+  tab: {
     paddingHorizontal: 16,
     paddingVertical: 8,
-    borderTopWidth: 1,
+    borderRadius: 20,
+    backgroundColor: '#f1f5f9',
+    marginRight: 8,
   },
-  dateRow: { flexDirection: 'row', alignItems: 'center' },
+  tabActive: { backgroundColor: '#6366f1' },
+  tabText: { fontFamily: 'Inter-Medium', fontSize: 13, color: '#64748b' },
+  tabTextActive: { fontFamily: 'Inter-SemiBold', color: '#fff' },
+
+  // Empty
+  emptyContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 32 },
+  emptyTitle: { fontSize: 18, fontFamily: 'Inter-Bold', color: '#0f172a', marginTop: 16 },
+  emptySub: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#64748b', textAlign: 'center', marginTop: 8 },
+
+  // List
+  content: { padding: 16 },
+  card: {
+    backgroundColor: '#fff',
+    borderRadius: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#f1f5f9',
+    overflow: 'hidden',
+    boxShadow: '0 2px 8px rgba(0,0,0,0.04)',
+  },
+  cardMain: { flexDirection: 'row', padding: 14 },
+  imgBox: {
+    width: 72,
+    height: 72,
+    borderRadius: 12,
+    backgroundColor: '#ea580c',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 14,
+  },
+  cardInfo: { flex: 1 },
+  titleRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    marginBottom: 4,
+  },
+  partName: { fontFamily: 'Inter-Bold', fontSize: 14, color: '#0f172a', flex: 1, marginRight: 8 },
+  statusBadge: { paddingHorizontal: 10, paddingVertical: 4, borderRadius: 8 },
+  statusText: { fontFamily: 'Inter-SemiBold', fontSize: 11, textAlign: 'center' },
+  supplierText: { fontFamily: 'Inter-Regular', fontSize: 12, color: '#64748b', marginBottom: 10 },
+  metaRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'flex-end' },
+  metaKey: { fontFamily: 'Inter-Bold', fontSize: 9, color: '#94a3b8', letterSpacing: 0.5, marginBottom: 2 },
+  metaRef: { fontFamily: 'Inter-Medium', fontSize: 12, color: '#334155' },
+  metaDate: { fontFamily: 'Inter-Regular', fontSize: 11, color: '#94a3b8', marginTop: 4 },
+  totalCol: { alignItems: 'flex-end' },
+  totalKey: { fontFamily: 'Inter-Bold', fontSize: 9, color: '#94a3b8', letterSpacing: 0.5, marginBottom: 2 },
+  totalVal: { fontFamily: 'Inter-Black', fontSize: 14, color: '#4f46e5' },
+
+  // Auth guard
+  authContainer: { flex: 1, justifyContent: 'center', alignItems: 'center', padding: 24, backgroundColor: '#f8fafc' },
+  authCard: {
+    width: '100%', backgroundColor: '#fff', borderRadius: 24, padding: 32,
+    alignItems: 'center', borderWidth: 1, borderColor: '#f1f5f9',
+    boxShadow: '0 4px 16px rgba(0,0,0,0.06)',
+  },
+  authTitle: { fontSize: 22, fontFamily: 'Inter-ExtraBold', color: '#0f172a', marginTop: 16, marginBottom: 10 },
+  authSub: { fontSize: 14, fontFamily: 'Inter-Regular', color: '#64748b', textAlign: 'center', lineHeight: 20, marginBottom: 24 },
+  authBtn: { width: '100%', paddingVertical: 15, borderRadius: 16, alignItems: 'center', marginBottom: 12, backgroundColor: '#6366f1' },
+  authBtnText: { color: '#fff', fontSize: 16, fontFamily: 'Inter-Bold' },
+  authRegister: { paddingVertical: 6 },
+  authRegisterText: { fontSize: 14, fontFamily: 'Inter-SemiBold', color: '#6366f1' },
 });
