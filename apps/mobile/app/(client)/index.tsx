@@ -65,204 +65,234 @@ export default function HomeScreen() {
       />
       <ScrollView showsVerticalScrollIndicator={false}>
 
-      {/* Main Gradient Header */}
-      <View style={styles.headerWrapper}>
-        <View style={styles.header}>
-          <HeaderGradient />
-          <View style={styles.headerInner}>
-            <View style={styles.headerTop}>
-              <View style={styles.locationRow}>
-                <Icon name="map-marker-outline" size={16} color="#fff" />
-                <Text style={styles.locationText}>{t('home.location')}</Text>
+        {/* Main Gradient Header */}
+        <View style={styles.headerWrapper}>
+          <View style={styles.header}>
+            <HeaderGradient />
+            <View style={styles.headerInner}>
+              <View style={styles.headerTop}>
+                <View style={styles.locationRow}>
+                  <Icon name="map-marker-outline" size={16} color="#fff" />
+                  <Text style={styles.locationText}>{t('home.location')}</Text>
+                </View>
               </View>
-            </View>
 
-            <Text style={styles.greeting}>
-              {t('home.greeting')} {user?.name?.split(' ')[0] || t('home.greetingDefault')} 👋
-            </Text>
-            <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
+              <Text style={styles.greeting}>
+                {t('home.greeting')} {user?.name?.split(' ')[0] || t('home.greetingDefault')} 👋
+              </Text>
+              <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
 
-            {/* Search Bar */}
-            <TouchableOpacity
-              style={styles.searchBox}
-              activeOpacity={0.9}
-              onPress={() => router.push('/search')}
-            >
-              <Icon name="magnify" size={20} color="#fff" style={styles.searchIcon} />
-              <Text style={styles.searchText}>{t('home.searchPlaceholder')}</Text>
-            </TouchableOpacity>
+              {/* Search Bar */}
+              <TouchableOpacity
+                style={styles.searchBox}
+                activeOpacity={0.9}
+                onPress={() => router.push('/search')}
+              >
+                <Icon name="magnify" size={20} color="#fff" style={styles.searchIcon} />
+                <Text style={styles.searchText}>{t('home.searchPlaceholder')}</Text>
+              </TouchableOpacity>
 
-            {/* Stats Row */}
-            <View style={styles.statsRow}>
-              <View style={styles.statBox}>
-                <Text style={styles.statNumber}>5000+</Text>
-                <Text style={styles.statLabel}>{t('home.statParts')}</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statNumber}>20</Text>
-                <Text style={styles.statLabel}>{t('home.statSuppliers')}</Text>
-              </View>
-              <View style={styles.statBox}>
-                <Text style={styles.statNumber}>12</Text>
-                <Text style={styles.statLabel}>{t('home.statCities')}</Text>
+              {/* Stats Row */}
+              <View style={styles.statsRow}>
+                <View style={styles.statBox}>
+                  <Text style={styles.statNumber}>5000+</Text>
+                  <Text style={styles.statLabel}>{t('home.statParts')}</Text>
+                </View>
+                <View style={styles.statBox}>
+                  <Text style={styles.statNumber}>20</Text>
+                  <Text style={styles.statLabel}>{t('home.statSuppliers')}</Text>
+                </View>
+                <View style={styles.statBox}>
+                  <Text style={styles.statNumber}>12</Text>
+                  <Text style={styles.statLabel}>{t('home.statCities')}</Text>
+                </View>
               </View>
             </View>
           </View>
         </View>
-      </View>
 
-      {/* Vehicle Card */}
-      <View style={styles.section}>
-        <View style={styles.vehicleOuterCard}>
-          <View style={styles.vehicleHeaderRow}>
-            <View>
-              <Text style={styles.vehicleTitle}>{t('home.myVehicle')}</Text>
-              <Text style={styles.vehicleSubtitle}>{t('home.vehicleSubtitle')}</Text>
+        {/* Vehicle Card */}
+        <View style={styles.section}>
+          <View style={styles.vehicleOuterCard}>
+            <View style={styles.vehicleHeaderRow}>
+              <View>
+                <Text style={styles.vehicleTitle}>{t('home.myVehicle')}</Text>
+                <Text style={styles.vehicleSubtitle}>{t('home.vehicleSubtitle')}</Text>
+              </View>
+              <TouchableOpacity>
+                <Text style={styles.vehicleManageText}>{t('common.manage')}</Text>
+              </TouchableOpacity>
             </View>
-            <TouchableOpacity>
-              <Text style={styles.vehicleManageText}>{t('common.manage')}</Text>
+
+            <View style={styles.vehicleInnerCard}>
+              <View style={styles.vehicleIcon}>
+                <Icon name="wrench-outline" size={24} color="#fff" />
+              </View>
+              <View style={{ flex: 1 }}>
+                <View style={styles.vehicleTitleRow}>
+                  <Text style={styles.vehicleName}>{myVehicle.brand} {myVehicle.model}</Text>
+                  <View style={styles.activeBadge}>
+                    <View style={styles.activeDot} />
+                    <Text style={styles.activeText}>{t('home.vehicleActive')}</Text>
+                  </View>
+                </View>
+                <Text style={styles.vehicleDetails}>
+                  {myVehicle.year} • {myVehicle.plate} • {myVehicle.color}
+                </Text>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Categories Grid */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>{t('home.categories')}</Text>
+            <TouchableOpacity onPress={() => router.push('/search')}>
+              <Text style={{ color: theme.colors.primary, fontWeight: '600', fontSize: 14 }}>
+                {t('common.seeAll')}
+              </Text>
             </TouchableOpacity>
           </View>
 
-          <View style={styles.vehicleInnerCard}>
-            <View style={styles.vehicleIcon}>
-              <Icon name="wrench-outline" size={24} color="#fff" />
+          <View style={styles.categoriesGrid}>
+            {CATEGORIES.slice(0, 8).map((c) => {
+              const config = categoryIcons[c.id] || { color: theme.colors.primary, icon: 'car-cog' };
+              return (
+                <TouchableOpacity key={c.id} style={styles.categoryItem} onPress={() => router.push('/search')}>
+                  <View style={[styles.categoryIconBox, { backgroundColor: config.color }]}>
+                    <Icon name={config.icon} size={28} color="#fff" />
+                  </View>
+                  <Text style={styles.categoryName} numberOfLines={1}>{c.name}</Text>
+                </TouchableOpacity>
+              );
+            })}
+          </View>
+        </View>
+
+        {/* Technician Contact Banner */}
+        <TouchableOpacity
+          style={[styles.techBanner, { marginHorizontal: 20, marginBottom: 24 }]}
+          onPress={() => router.push('/technician-contact')}
+          activeOpacity={0.85}
+        >
+          <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
+            <Defs>
+              <LinearGradient id="techGrad" x1="0" y1="0" x2="1" y2="0">
+                <Stop offset="0" stopColor="#6C3CE1" />
+                <Stop offset="1" stopColor="#9333EA" />
+              </LinearGradient>
+            </Defs>
+            <Rect width="100%" height="100%" rx={16} fill="url(#techGrad)" />
+          </Svg>
+          <View style={styles.techContent}>
+            <View style={styles.techIconBox}>
+              <Icon name="account-wrench" size={28} color="#fff" />
             </View>
             <View style={{ flex: 1 }}>
-              <View style={styles.vehicleTitleRow}>
-                <Text style={styles.vehicleName}>{myVehicle.brand} {myVehicle.model}</Text>
-                <View style={styles.activeBadge}>
-                  <View style={styles.activeDot} />
-                  <Text style={styles.activeText}>{t('home.vehicleActive')}</Text>
-                </View>
-              </View>
-              <Text style={styles.vehicleDetails}>
-                {myVehicle.year} • {myVehicle.plate} • {myVehicle.color}
-              </Text>
+              <Text style={styles.techLabel}>{t('technician.bannerTitle')}</Text>
+              <Text style={styles.techTitle}>{t('technician.bannerSub')}</Text>
+            </View>
+            <View style={styles.techBtn}>
+              <Text style={styles.techBtnText}>{t('technician.bannerBtn')}</Text>
+              <Icon name="chevron-right" size={16} color="#6C3CE1" />
             </View>
           </View>
-        </View>
-      </View>
+        </TouchableOpacity>
 
-      {/* Categories Grid */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>{t('home.categories')}</Text>
-          <TouchableOpacity onPress={() => router.push('/search')}>
-            <Text style={{ color: theme.colors.primary, fontWeight: '600', fontSize: 14 }}>
-              {t('common.seeAll')}
-            </Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.categoriesGrid}>
-          {CATEGORIES.slice(0, 8).map((c) => {
-            const config = categoryIcons[c.id] || { color: theme.colors.primary, icon: 'car-cog' };
-            return (
-              <TouchableOpacity key={c.id} style={styles.categoryItem} onPress={() => router.push('/search')}>
-                <View style={[styles.categoryIconBox, { backgroundColor: config.color }]}>
-                  <Icon name={config.icon} size={28} color="#fff" />
-                </View>
-                <Text style={styles.categoryName} numberOfLines={1}>{c.name}</Text>
-              </TouchableOpacity>
-            );
-          })}
-        </View>
-      </View>
-
-      {/* Promo Banner */}
-      <View style={[styles.promoBanner, { marginHorizontal: 20, marginBottom: 24 }]}>
-        <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
-          <Defs>
-            <LinearGradient id="promoGrad" x1="0" y1="0" x2="1" y2="0">
-              <Stop offset="0" stopColor="#F97316" />
-              <Stop offset="1" stopColor="#EA580C" />
-            </LinearGradient>
-          </Defs>
-          <Rect width="100%" height="100%" rx={16} fill="url(#promoGrad)" />
-        </Svg>
-        <View style={styles.promoContent}>
-          <View style={styles.promoIconBox}>
-            <Icon name="tag-outline" size={24} color="#fff" />
-          </View>
-          <View style={styles.promoTextContainer}>
-            <Text style={styles.promoLabel}>{t('home.promoLabel')}</Text>
-            <Text style={styles.promoTitle}>{t('home.promoTitle')}</Text>
-            <Text style={styles.promoSub}>{t('home.promoSub')}</Text>
-          </View>
-          <TouchableOpacity style={styles.promoBtn}>
-            <Text style={styles.promoBtnText}>{t('home.promoBtn')}</Text>
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      {/* Featured Parts */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Icon name="auto-fix" size={20} color="#F59E0B" />
-            <Text style={styles.sectionTitle}>{t('home.newParts')}</Text>
+        {/* Promo Banner */}
+        <View style={[styles.promoBanner, { marginHorizontal: 20, marginBottom: 24 }]}>
+          <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
+            <Defs>
+              <LinearGradient id="promoGrad" x1="0" y1="0" x2="1" y2="0">
+                <Stop offset="0" stopColor="#F97316" />
+                <Stop offset="1" stopColor="#EA580C" />
+              </LinearGradient>
+            </Defs>
+            <Rect width="100%" height="100%" rx={16} fill="url(#promoGrad)" />
+          </Svg>
+          <View style={styles.promoContent}>
+            <View style={styles.promoIconBox}>
+              <Icon name="tag-outline" size={24} color="#fff" />
+            </View>
+            <View style={styles.promoTextContainer}>
+              <Text style={styles.promoLabel}>{t('home.promoLabel')}</Text>
+              <Text style={styles.promoTitle}>{t('home.promoTitle')}</Text>
+              <Text style={styles.promoSub}>{t('home.promoSub')}</Text>
+            </View>
+            <TouchableOpacity style={styles.promoBtn}>
+              <Text style={styles.promoBtnText}>{t('home.promoBtn')}</Text>
+            </TouchableOpacity>
           </View>
         </View>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
-          {t('home.newPartsSubtitle')}
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
-          {FEATURED_PARTS.map((p) => (
-            <PartCard
-              key={p.id}
-              part={p}
-              onPress={() => { }}
-              isFav={favoriteIds.includes(p.id)}
-              onFav={() => toggleFavorite(p.id)}
-              onAdd={() => addToCart(p, 1)}
-            />
-          ))}
-        </ScrollView>
-      </View>
 
-      {/* Popular Parts (Tendances) */}
-      <View style={styles.section}>
-        <View style={styles.sectionHeader}>
-          <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
-            <Icon name="fire" size={20} color="#EF4444" />
-            <Text style={styles.sectionTitle}>{t('home.trending')}</Text>
+        {/* Featured Parts */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Icon name="auto-fix" size={20} color="#F59E0B" />
+              <Text style={styles.sectionTitle}>{t('home.newParts')}</Text>
+            </View>
+          </View>
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
+            {t('home.newPartsSubtitle')}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
+            {FEATURED_PARTS.map((p) => (
+              <PartCard
+                key={p.id}
+                part={p}
+                onPress={() => { }}
+                isFav={favoriteIds.includes(p.id)}
+                onFav={() => toggleFavorite(p.id)}
+                onAdd={() => addToCart(p, 1)}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Popular Parts (Tendances) */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+              <Icon name="fire" size={20} color="#EF4444" />
+              <Text style={styles.sectionTitle}>{t('home.trending')}</Text>
+            </View>
+          </View>
+          <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
+            {t('home.trendingSubtitle')}
+          </Text>
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
+            {POPULAR_PARTS.map((p) => (
+              <PartCard
+                key={p.id}
+                part={p}
+                onPress={() => { }}
+                isFav={favoriteIds.includes(p.id)}
+                onFav={() => toggleFavorite(p.id)}
+                onAdd={() => addToCart(p, 1)}
+              />
+            ))}
+          </ScrollView>
+        </View>
+
+        {/* Trust Badges */}
+        <View style={styles.trustBadgesContainer}>
+          <View style={styles.trustBadge}>
+            <Icon name="shield-check-outline" size={28} color="#059669" />
+            <Text style={styles.trustBadgeText}>{t('home.certifiedParts')}</Text>
+          </View>
+          <View style={styles.trustBadge}>
+            <Icon name="truck-fast-outline" size={28} color="#0284C7" />
+            <Text style={styles.trustBadgeText}>{t('home.fastDelivery')}</Text>
+          </View>
+          <View style={styles.trustBadge}>
+            <Icon name="clock-outline" size={28} color="#7C3AED" />
+            <Text style={styles.trustBadgeText}>{t('home.support247')}</Text>
           </View>
         </View>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
-          {t('home.trendingSubtitle')}
-        </Text>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
-          {POPULAR_PARTS.map((p) => (
-            <PartCard
-              key={p.id}
-              part={p}
-              onPress={() => { }}
-              isFav={favoriteIds.includes(p.id)}
-              onFav={() => toggleFavorite(p.id)}
-              onAdd={() => addToCart(p, 1)}
-            />
-          ))}
-        </ScrollView>
-      </View>
 
-      {/* Trust Badges */}
-      <View style={styles.trustBadgesContainer}>
-        <View style={styles.trustBadge}>
-          <Icon name="shield-check-outline" size={28} color="#059669" />
-          <Text style={styles.trustBadgeText}>{t('home.certifiedParts')}</Text>
-        </View>
-        <View style={styles.trustBadge}>
-          <Icon name="truck-fast-outline" size={28} color="#0284C7" />
-          <Text style={styles.trustBadgeText}>{t('home.fastDelivery')}</Text>
-        </View>
-        <View style={styles.trustBadge}>
-          <Icon name="clock-outline" size={28} color="#7C3AED" />
-          <Text style={styles.trustBadgeText}>{t('home.support247')}</Text>
-        </View>
-      </View>
-
-      <View style={{ height: 40 }} />
+        <View style={{ height: 40 }} />
       </ScrollView>
     </View>
   );
@@ -494,6 +524,53 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#374151',
     fontFamily: 'Inter-Medium',
+  },
+  techBanner: {
+    borderRadius: 16,
+    overflow: 'hidden',
+    position: 'relative',
+    boxShadow: '0px 8px 20px rgba(108, 60, 225, 0.3)',
+  },
+  techContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    gap: 12,
+  },
+  techIconBox: {
+    width: 48,
+    height: 48,
+    borderRadius: 14,
+    backgroundColor: 'rgba(255,255,255,0.18)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  techLabel: {
+    color: 'rgba(255,255,255,0.85)',
+    fontSize: 10,
+    fontFamily: 'Inter-ExtraBold',
+    letterSpacing: 0.5,
+    textTransform: 'uppercase',
+  },
+  techTitle: {
+    color: '#fff',
+    fontSize: 10,
+    fontFamily: 'Inter-SemiBold',
+    marginTop: 2,
+  },
+  techBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#fff',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 20,
+    gap: 4,
+  },
+  techBtnText: {
+    color: '#6C3CE1',
+    fontFamily: 'Inter-Bold',
+    fontSize: 12,
   },
   promoBanner: {
     borderRadius: 16,

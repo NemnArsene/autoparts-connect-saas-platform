@@ -157,6 +157,7 @@ export default function ClientTabsLayout() {
       <Tabs.Screen name="favorites/index" options={{ href: null }} />
       <Tabs.Screen name="vehicles/index" options={{ href: null }} />
       <Tabs.Screen name="part/[id]" options={{ href: null }} />
+      <Tabs.Screen name="technician-contact" options={{ href: null }} />
     </Tabs>
   );
 }

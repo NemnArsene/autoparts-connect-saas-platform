@@ -23,6 +23,7 @@ import {
   LogoutIcon,
   ChevronRightIcon,
   CloseIcon,
+  WrenchIcon,
 } from './Icons';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -115,6 +116,13 @@ export const MoreModal: React.FC<MoreModalProps> = ({
   };
 
   const menuItems: MoreMenuItem[] = [
+    {
+      id: 'technician',
+      label: t('technician.menuLabel'),
+      subtitle: t('technician.menuSub'),
+      icon: WrenchIcon,
+      route: '/technician-contact',
+    },
     {
       id: 'history',
       label: t('more.history'),

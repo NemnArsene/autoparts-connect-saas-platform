@@ -216,3 +216,10 @@ export const CloseIcon = ({ color = '#888', size = 24 }: IconProps) => (
     <Path d="M6 6L18 18" stroke={color} strokeWidth={2} strokeLinecap="round" />
   </Svg>
 );
+
+export const WrenchIcon = ({ color = '#888', size = 24 }: IconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M14.7 6.3C14.3 5.9 13.7 5.6 13 5.6C12.3 5.6 11.7 5.9 11.3 6.3C10.9 6.7 10.6 7.3 10.6 8C10.6 8.7 10.9 9.3 11.3 9.7C11.7 10.1 12.3 10.4 13 10.4C13.7 10.4 14.3 10.1 14.7 9.7C15.1 9.3 15.4 8.7 15.4 8C15.4 7.3 15.1 6.7 14.7 6.3Z" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M5.6 13V16.3C5.6 16.8 6 17.2 6.5 17.4L8 18C8.5 18.2 9.1 18 9.3 17.5L12 14.8" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+  </Svg>
+);
