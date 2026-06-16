@@ -223,3 +223,12 @@ export const WrenchIcon = ({ color = '#888', size = 24 }: IconProps) => (
     <Path d="M5.6 13V16.3C5.6 16.8 6 17.2 6.5 17.4L8 18C8.5 18.2 9.1 18 9.3 17.5L12 14.8" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
   </Svg>
 );
+
+export const ClipboardTextIcon = ({ color = '#888', size = 24 }: IconProps) => (
+  <Svg width={size} height={size} viewBox="0 0 24 24" fill="none">
+    <Path d="M16 4H18C19.1 4 20 4.9 20 6V20C20 21.1 19.1 22 18 22H6C4.9 22 4 21.1 4 20V6C4 4.9 4.9 4 6 4H8" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M15 2H9C8.45 2 8 2.45 8 3V5C8 5.55 8.45 6 9 6H15C15.55 6 16 5.55 16 5V3C16 2.45 15.55 2 15 2Z" stroke={color} strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" />
+    <Path d="M9 13H15" stroke={color} strokeWidth={2} strokeLinecap="round" />
+    <Path d="M9 17H12" stroke={color} strokeWidth={2} strokeLinecap="round" />
+  </Svg>
+);

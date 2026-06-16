@@ -263,6 +263,21 @@
     "success": "Request sent!",
     "successMessage": "Your request has been sent to the technician. You'll receive a confirmation shortly.",
     "cancel": "Cancel",
+    "requests": {
+      "title": "My Requests",
+      "newRequest": "New request",
+      "newRequestSub": "Contact a technician",
+      "active": "In progress",
+      "past": "History",
+      "statusPending": "Pending",
+      "statusConfirmed": "Confirmed",
+      "statusCompleted": "Completed",
+      "statusCancelled": "Cancelled",
+      "emptyTitle": "No requests",
+      "emptyMessage": "You haven't made any technician requests yet. Create your first request now.",
+      "makeFirst": "Make my first request",
+      "viewRequests": "View my requests"
+    },
     "problems": {
       "brake": "Brake problem",
       "engine": "Engine problem",

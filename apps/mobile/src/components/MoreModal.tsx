@@ -24,6 +24,7 @@ import {
   ChevronRightIcon,
   CloseIcon,
   WrenchIcon,
+  ClipboardTextIcon,
 } from './Icons';
 
 const { height: SCREEN_HEIGHT } = Dimensions.get('window');
@@ -122,6 +123,13 @@ export const MoreModal: React.FC<MoreModalProps> = ({
       subtitle: t('technician.menuSub'),
       icon: WrenchIcon,
       route: '/technician-contact',
+    },
+    {
+      id: 'technician-requests',
+      label: t('technician.requests.title'),
+      subtitle: t('technician.requests.viewRequests'),
+      icon: ClipboardTextIcon,
+      route: '/technician-requests',
     },
     {
       id: 'history',

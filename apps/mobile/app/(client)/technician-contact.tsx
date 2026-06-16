@@ -233,13 +233,28 @@ export default function TechnicianContactScreen() {
           <Text style={[styles.successMessage, { color: theme.colors.onSurfaceVariant }]}>
             {t('technician.successMessage')}
           </Text>
-          <TouchableOpacity
-            style={[styles.successBtn, { backgroundColor: primaryColor }]}
-            onPress={() => router.back()}
-            activeOpacity={0.85}
-          >
-            <Text style={styles.successBtnText}>{t('common.back')}</Text>
-          </TouchableOpacity>
+          <View style={styles.successBtns}>
+            <TouchableOpacity
+              style={[styles.successBtnSecondary, { borderColor: primaryColor }]}
+              onPress={() => {
+                // Reset form and start new request
+                setForm(INITIAL_FORM);
+                setSuccess(false);
+                setCurrentStep(1);
+              }}
+              activeOpacity={0.85}
+            >
+              <Icon name="plus" size={18} color={primaryColor} style={{ marginRight: 6 }} />
+              <Text style={[styles.successBtnSecondaryText, { color: primaryColor }]}>{t('technician.requests.newRequest')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.successBtn, { backgroundColor: primaryColor }]}
+              onPress={() => router.back()}
+              activeOpacity={0.85}
+            >
+              <Text style={styles.successBtnText}>{t('common.back')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
       </View>
     );
@@ -810,9 +825,25 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     lineHeight: 20,
   },
-  successBtn: {
+  successBtns: {
+    flexDirection: 'row',
+    gap: 12,
     marginTop: 16,
-    paddingHorizontal: 32,
+  },
+  successBtnSecondary: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderWidth: 1.5,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
+    borderRadius: 14,
+  },
+  successBtnSecondaryText: {
+    fontSize: 14,
+    fontFamily: 'Inter-Bold',
+  },
+  successBtn: {
+    paddingHorizontal: 28,
     paddingVertical: 14,
     borderRadius: 14,
   },

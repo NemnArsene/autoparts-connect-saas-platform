@@ -1,5 +1,5 @@
-import React from 'react';
-import { View, ScrollView, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import React, { useRef, useEffect } from 'react';
+import { View, ScrollView, StyleSheet, Platform, TouchableOpacity, Animated } from 'react-native';
 import { Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useCartStore, useFavoritesStore } from '@autoparts/hooks';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { PartCard } from '../../src/components/PartCard';
 import { TopHeader } from '../../src/components/TopHeader';
+import { TechnicianBanner } from '../../src/components/TechnicianBanner';
 import { useTranslation } from 'react-i18next';
 
 const FEATURED_PARTS = PARTS.filter((p) => p.isNew).slice(0, 8);
@@ -170,36 +171,6 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        {/* Technician Contact Banner */}
-        <TouchableOpacity
-          style={[styles.techBanner, { marginHorizontal: 20, marginBottom: 24 }]}
-          onPress={() => router.push('/technician-contact')}
-          activeOpacity={0.85}
-        >
-          <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
-            <Defs>
-              <LinearGradient id="techGrad" x1="0" y1="0" x2="1" y2="0">
-                <Stop offset="0" stopColor="#6C3CE1" />
-                <Stop offset="1" stopColor="#9333EA" />
-              </LinearGradient>
-            </Defs>
-            <Rect width="100%" height="100%" rx={16} fill="url(#techGrad)" />
-          </Svg>
-          <View style={styles.techContent}>
-            <View style={styles.techIconBox}>
-              <Icon name="account-wrench" size={28} color="#fff" />
-            </View>
-            <View style={{ flex: 1 }}>
-              <Text style={styles.techLabel}>{t('technician.bannerTitle')}</Text>
-              <Text style={styles.techTitle}>{t('technician.bannerSub')}</Text>
-            </View>
-            <View style={styles.techBtn}>
-              <Text style={styles.techBtnText}>{t('technician.bannerBtn')}</Text>
-              <Icon name="chevron-right" size={16} color="#6C3CE1" />
-            </View>
-          </View>
-        </TouchableOpacity>
-
         {/* Promo Banner */}
         <View style={[styles.promoBanner, { marginHorizontal: 20, marginBottom: 24 }]}>
           <Svg width="100%" height="100%" preserveAspectRatio="none" style={StyleSheet.absoluteFill}>
@@ -250,6 +221,14 @@ export default function HomeScreen() {
             ))}
           </ScrollView>
         </View>
+
+        {/* Technician Contact Banner (animated) */}
+        <TechnicianBanner
+          onPress={() => router.push('/technician-contact')}
+          label={t('technician.bannerTitle')}
+          subtitle={t('technician.bannerSub')}
+          btnText={t('technician.bannerBtn')}
+        />
 
         {/* Popular Parts (Tendances) */}
         <View style={styles.section}>

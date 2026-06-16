@@ -263,6 +263,21 @@
     "success": "Demande envoyée !",
     "successMessage": "Votre demande a été envoyée au technicien. Vous recevrez une confirmation sous peu.",
     "cancel": "Annuler",
+    "requests": {
+      "title": "Mes demandes",
+      "newRequest": "Nouvelle demande",
+      "newRequestSub": "Contacter un technicien",
+      "active": "En cours",
+      "past": "Historique",
+      "statusPending": "En attente",
+      "statusConfirmed": "Confirmé",
+      "statusCompleted": "Terminé",
+      "statusCancelled": "Annulé",
+      "emptyTitle": "Aucune demande",
+      "emptyMessage": "Vous n'avez pas encore fait de demande de technicien. Créez votre première demande maintenant.",
+      "makeFirst": "Faire ma première demande",
+      "viewRequests": "Voir mes demandes"
+    },
     "problems": {
       "brake": "Problème de frein",
       "engine": "Problème moteur",
