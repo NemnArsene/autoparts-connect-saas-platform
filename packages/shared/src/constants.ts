@@ -8,10 +8,10 @@ export const APP_TAGLINE = 'La marketplace des pièces auto en Afrique';
 export const CURRENCY = 'XOF';
 export const CURRENCY_LOCALE = 'fr-FR';
 
-export const SUPPORT_EMAIL = 'support@autoparts-connect.ci';
-export const SUPPORT_PHONE = '+225 27 22 49 30 00';
+export const SUPPORT_EMAIL = 'support@autoparts-connect.cm';
+export const SUPPORT_PHONE = '+237 6 96 56 71 84';
 
-export const CONTACT_EMAIL = 'contact@autoparts-connect.ci';
+export const CONTACT_EMAIL = 'contact@autoparts-connect.cm';
 
 export const MAX_CART_QUANTITY = 99;
 export const MAX_HISTORY_PAGES = 20;

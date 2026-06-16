@@ -10,6 +10,7 @@ export interface User {
   email: string;
   phone: string;
   avatar: string;   // initials e.g. "KY"
+  avatarUri?: string; // uploaded photo URI
   role: UserRole;
   city?: string;
   address?: string;

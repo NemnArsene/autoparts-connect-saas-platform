@@ -151,6 +151,10 @@ export default function ClientTabsLayout() {
       <Tabs.Screen name="cart" options={{ href: null }} />
       <Tabs.Screen name="checkout" options={{ href: null }} />
       <Tabs.Screen name="profile/index" options={{ href: null }} />
+      <Tabs.Screen name="edit-profile/index" options={{ href: null }} />
+      <Tabs.Screen name="settings/index" options={{ href: null }} />
+      <Tabs.Screen name="support/index" options={{ href: null }} />
+      <Tabs.Screen name="favorites/index" options={{ href: null }} />
       <Tabs.Screen name="vehicles/index" options={{ href: null }} />
       <Tabs.Screen name="part/[id]" options={{ href: null }} />
     </Tabs>

@@ -17,7 +17,7 @@ export const useReservationsStore = create<ReservationsState>()(
       
       addReservation: (payload, userId) => set((state) => {
         const newRes: Reservation = {
-          id: `res-${Date.now()}`,
+          id: `res-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
           userId,
           partId: payload.partId,
           partName: payload.partName,

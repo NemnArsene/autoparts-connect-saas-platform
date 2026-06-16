@@ -7,6 +7,7 @@ import type { User, UserRole } from '@autoparts/models';
 interface AuthState {
   user: User | null;
   login: (email: string, _pass: string, role: UserRole) => Promise<void>;
+  updateProfile: (updates: Partial<Pick<User, 'name' | 'email' | 'phone' | 'avatar' | 'avatarUri'>>) => void;
   logout: () => void;
 }
 
@@ -27,6 +28,10 @@ export const useAuthStore = create<AuthState>()(
         };
         set({ user: mockUser });
       },
+      
+      updateProfile: (updates) => set((state) => ({
+        user: state.user ? { ...state.user, ...updates } : null,
+      })),
       
       logout: () => set({ user: null }),
     }),
