@@ -1,6 +1,6 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Platform, TouchableOpacity, TextInput } from 'react-native';
-import { Text, useTheme, Button, IconButton } from 'react-native-paper';
+import { View, ScrollView, StyleSheet, Platform, TouchableOpacity } from 'react-native';
+import { Text, useTheme } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useCartStore, useFavoritesStore } from '@autoparts/hooks';
 import { CATEGORIES, VEHICLES, PARTS } from '@autoparts/models';
@@ -8,6 +8,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { PartCard } from '../../src/components/PartCard';
 import { TopHeader } from '../../src/components/TopHeader';
+import { useTranslation } from 'react-i18next';
 
 const FEATURED_PARTS = PARTS.filter((p) => p.isNew).slice(0, 8);
 const POPULAR_PARTS = PARTS.filter((p) => p.rating >= 4.5).slice(0, 8);
@@ -29,6 +30,7 @@ function HeaderGradient() {
 }
 
 export default function HomeScreen() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const router = useRouter();
   const { user } = useAuthStore();
@@ -51,10 +53,10 @@ export default function HomeScreen() {
 
   return (
     <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <TopHeader 
-        title="System for Reserving" 
-        subtitle="Car Spare Parts (ASPS)" 
-        showBack={false} 
+      <TopHeader
+        title={t('common.appTitle')}
+        subtitle={t('common.appSubtitle')}
+        showBack={false}
         leftIcon={
           <View style={styles.logoCircle}>
             <Icon name="snowflake" size={18} color="#fff" />
@@ -71,12 +73,14 @@ export default function HomeScreen() {
             <View style={styles.headerTop}>
               <View style={styles.locationRow}>
                 <Icon name="map-marker-outline" size={16} color="#fff" />
-                <Text style={styles.locationText}>Douala 5ème</Text>
+                <Text style={styles.locationText}>{t('home.location')}</Text>
               </View>
             </View>
 
-            <Text style={styles.greeting}>Bonjour {user?.name?.split(' ')[0] || 'Kouamé'} 👋</Text>
-            <Text style={styles.subtitle}>Trouvez votre pièce en moins de 30 secondes</Text>
+            <Text style={styles.greeting}>
+              {t('home.greeting')} {user?.name?.split(' ')[0] || t('home.greetingDefault')} 👋
+            </Text>
+            <Text style={styles.subtitle}>{t('home.subtitle')}</Text>
 
             {/* Search Bar */}
             <TouchableOpacity
@@ -85,22 +89,22 @@ export default function HomeScreen() {
               onPress={() => router.push('/search')}
             >
               <Icon name="magnify" size={20} color="#fff" style={styles.searchIcon} />
-              <Text style={styles.searchText}>Rechercher une pièce, marque...</Text>
+              <Text style={styles.searchText}>{t('home.searchPlaceholder')}</Text>
             </TouchableOpacity>
 
             {/* Stats Row */}
             <View style={styles.statsRow}>
               <View style={styles.statBox}>
                 <Text style={styles.statNumber}>5000+</Text>
-                <Text style={styles.statLabel}>PIÈCES</Text>
+                <Text style={styles.statLabel}>{t('home.statParts')}</Text>
               </View>
               <View style={styles.statBox}>
                 <Text style={styles.statNumber}>20</Text>
-                <Text style={styles.statLabel}>FOURNISSEURS</Text>
+                <Text style={styles.statLabel}>{t('home.statSuppliers')}</Text>
               </View>
               <View style={styles.statBox}>
                 <Text style={styles.statNumber}>12</Text>
-                <Text style={styles.statLabel}>VILLES</Text>
+                <Text style={styles.statLabel}>{t('home.statCities')}</Text>
               </View>
             </View>
           </View>
@@ -112,11 +116,11 @@ export default function HomeScreen() {
         <View style={styles.vehicleOuterCard}>
           <View style={styles.vehicleHeaderRow}>
             <View>
-              <Text style={styles.vehicleTitle}>Mon véhicule</Text>
-              <Text style={styles.vehicleSubtitle}>Pièces compatibles à portée de main</Text>
+              <Text style={styles.vehicleTitle}>{t('home.myVehicle')}</Text>
+              <Text style={styles.vehicleSubtitle}>{t('home.vehicleSubtitle')}</Text>
             </View>
             <TouchableOpacity>
-              <Text style={styles.vehicleManageText}>Gérer</Text>
+              <Text style={styles.vehicleManageText}>{t('common.manage')}</Text>
             </TouchableOpacity>
           </View>
 
@@ -129,7 +133,7 @@ export default function HomeScreen() {
                 <Text style={styles.vehicleName}>{myVehicle.brand} {myVehicle.model}</Text>
                 <View style={styles.activeBadge}>
                   <View style={styles.activeDot} />
-                  <Text style={styles.activeText}>Actif</Text>
+                  <Text style={styles.activeText}>{t('home.vehicleActive')}</Text>
                 </View>
               </View>
               <Text style={styles.vehicleDetails}>
@@ -143,9 +147,11 @@ export default function HomeScreen() {
       {/* Categories Grid */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
-          <Text style={styles.sectionTitle}>Catégories</Text>
+          <Text style={styles.sectionTitle}>{t('home.categories')}</Text>
           <TouchableOpacity onPress={() => router.push('/search')}>
-            <Text style={{ color: theme.colors.primary, fontWeight: '600', fontSize: 14 }}>Tout voir </Text>
+            <Text style={{ color: theme.colors.primary, fontWeight: '600', fontSize: 14 }}>
+              {t('common.seeAll')}
+            </Text>
           </TouchableOpacity>
         </View>
 
@@ -180,12 +186,12 @@ export default function HomeScreen() {
             <Icon name="tag-outline" size={24} color="#fff" />
           </View>
           <View style={styles.promoTextContainer}>
-            <Text style={styles.promoLabel}>OFFRE LIMITÉE</Text>
-            <Text style={styles.promoTitle}>-25% sur les filtres à huile</Text>
-            <Text style={styles.promoSub}>Jusqu'à dimanche • Code AUTO25</Text>
+            <Text style={styles.promoLabel}>{t('home.promoLabel')}</Text>
+            <Text style={styles.promoTitle}>{t('home.promoTitle')}</Text>
+            <Text style={styles.promoSub}>{t('home.promoSub')}</Text>
           </View>
           <TouchableOpacity style={styles.promoBtn}>
-            <Text style={styles.promoBtnText}>Voir</Text>
+            <Text style={styles.promoBtnText}>{t('home.promoBtn')}</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -195,10 +201,12 @@ export default function HomeScreen() {
         <View style={styles.sectionHeader}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Icon name="auto-fix" size={20} color="#F59E0B" />
-            <Text style={styles.sectionTitle}>Nouveautés</Text>
+            <Text style={styles.sectionTitle}>{t('home.newParts')}</Text>
           </View>
         </View>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>Pièces récemment ajoutées</Text>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
+          {t('home.newPartsSubtitle')}
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
           {FEATURED_PARTS.map((p) => (
             <PartCard
@@ -212,15 +220,18 @@ export default function HomeScreen() {
           ))}
         </ScrollView>
       </View>
+
       {/* Popular Parts (Tendances) */}
       <View style={styles.section}>
         <View style={styles.sectionHeader}>
           <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
             <Icon name="fire" size={20} color="#EF4444" />
-            <Text style={styles.sectionTitle}>Tendances</Text>
+            <Text style={styles.sectionTitle}>{t('home.trending')}</Text>
           </View>
         </View>
-        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>Les pièces les plus demandées</Text>
+        <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 13, marginBottom: 16, marginTop: -8 }}>
+          {t('home.trendingSubtitle')}
+        </Text>
         <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalScroll} contentContainerStyle={{ paddingRight: 20 }}>
           {POPULAR_PARTS.map((p) => (
             <PartCard
@@ -239,15 +250,15 @@ export default function HomeScreen() {
       <View style={styles.trustBadgesContainer}>
         <View style={styles.trustBadge}>
           <Icon name="shield-check-outline" size={28} color="#059669" />
-          <Text style={styles.trustBadgeText}>Pièces certifiées</Text>
+          <Text style={styles.trustBadgeText}>{t('home.certifiedParts')}</Text>
         </View>
         <View style={styles.trustBadge}>
           <Icon name="truck-fast-outline" size={28} color="#0284C7" />
-          <Text style={styles.trustBadgeText}>Livraison rapide</Text>
+          <Text style={styles.trustBadgeText}>{t('home.fastDelivery')}</Text>
         </View>
         <View style={styles.trustBadge}>
           <Icon name="clock-outline" size={28} color="#7C3AED" />
-          <Text style={styles.trustBadgeText}>Support 24/7</Text>
+          <Text style={styles.trustBadgeText}>{t('home.support247')}</Text>
         </View>
       </View>
 
@@ -258,8 +269,15 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  container: { flex: 1 },
+  logoCircle: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#9333EA',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 8,
   },
   topHeader: {
     flexDirection: 'row',
@@ -324,9 +342,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: 'rgba(255,255,255,0.2)',
   },
-  searchIcon: {
-    marginRight: 10,
-  },
+  searchIcon: { marginRight: 10 },
   searchText: {
     color: 'rgba(255,255,255,0.8)',
     fontSize: 14,
@@ -491,12 +507,8 @@ const styles = StyleSheet.create({
     padding: 16,
     gap: 10,
   },
-  promoIconBox: {
-    padding: 8,
-  },
-  promoTextContainer: {
-    flex: 1,
-  },
+  promoIconBox: { padding: 8 },
+  promoTextContainer: { flex: 1 },
   promoLabel: {
     color: 'rgba(255,255,255,0.9)',
     fontSize: 10,
@@ -525,9 +537,7 @@ const styles = StyleSheet.create({
     fontFamily: 'Inter-Bold',
     fontSize: 13,
   },
-  horizontalScroll: {
-    overflow: 'visible',
-  },
+  horizontalScroll: { overflow: 'visible' },
   trustBadgesContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',

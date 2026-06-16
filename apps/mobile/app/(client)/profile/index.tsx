@@ -1,155 +1,314 @@
-import { View, ScrollView, StyleSheet } from 'react-native';
-import { Text, useTheme, Avatar, List, Divider, Button } from 'react-native-paper';
+
+import React, { useState } from 'react';
+import {
+  View,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  Switch,
+  Platform,
+} from 'react-native';
+import { Text } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@autoparts/hooks';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '../../../src/i18n';
 
-export default function ProfileScreen() {
-  const theme = useTheme();
+// ── Toggle Row ─────────────────────────────────────────────────────────────────
+function ToggleRow({
+  label,
+  value,
+  onValueChange,
+  isLast = false,
+}: {
+  label: string;
+  value: boolean;
+  onValueChange: (v: boolean) => void;
+  isLast?: boolean;
+}) {
+  return (
+    <View style={[styles.row, !isLast && styles.rowBorder]}>
+      <Text style={styles.rowLabel}>{label}</Text>
+      <Switch
+        value={value}
+        onValueChange={onValueChange}
+        trackColor={{ false: '#CBD5E1', true: '#4F46E5' }}
+        thumbColor="#fff"
+        ios_backgroundColor="#CBD5E1"
+        style={{ transform: [{ scaleX: 0.9 }, { scaleY: 0.9 }] }}
+      />
+    </View>
+  );
+}
+
+// ── Value Row ──────────────────────────────────────────────────────────────────
+function ValueRow({
+  label,
+  value,
+  onPress,
+  isLast = false,
+  arrow = false,
+}: {
+  label: string;
+  value?: string;
+  onPress?: () => void;
+  isLast?: boolean;
+  arrow?: boolean;
+}) {
+  return (
+    <TouchableOpacity
+      style={[styles.row, !isLast && styles.rowBorder]}
+      onPress={onPress}
+      activeOpacity={onPress ? 0.6 : 1}
+      disabled={!onPress}
+    >
+      <Text style={styles.rowLabel}>{label}</Text>
+      <View style={styles.rowRight}>
+        {value ? <Text style={styles.rowValue}>{value}</Text> : null}
+        {arrow && <Icon name="arrow-right" size={16} color="#64748B" />}
+      </View>
+    </TouchableOpacity>
+  );
+}
+
+// ── Language Selector Row ──────────────────────────────────────────────────────
+function LanguageSelectorRow({
+  label,
+  currentLang,
+  onChange,
+  isLast = false,
+}: {
+  label: string;
+  currentLang: string;
+  onChange: (lang: 'fr' | 'en') => void;
+  isLast?: boolean;
+}) {
+  return (
+    <View style={[styles.row, !isLast && styles.rowBorder]}>
+      <Text style={styles.rowLabel}>{label}</Text>
+      <View style={styles.langPills}>
+        <TouchableOpacity
+          style={[styles.langPill, currentLang === 'fr' && styles.langPillActive]}
+          onPress={() => onChange('fr')}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.langPillText, currentLang === 'fr' && styles.langPillTextActive]}>
+            FR
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.langPill, currentLang === 'en' && styles.langPillActive]}
+          onPress={() => onChange('en')}
+          activeOpacity={0.8}
+        >
+          <Text style={[styles.langPillText, currentLang === 'en' && styles.langPillTextActive]}>
+            EN
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </View>
+  );
+}
+
+// ── Main Screen ────────────────────────────────────────────────────────────────
+export default function SettingsScreen() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const { user, logout } = useAuthStore();
 
-  const handleLogout = () => {
-    logout();
-    router.replace('/');
-  };
+  const [darkMode, setDarkMode] = useState(false);
+  const [pushNotif, setPushNotif] = useState(true);
+  const [emailNotif, setEmailNotif] = useState(true);
+  const [smsNotif, setSmsNotif] = useState(false);
 
-  const getInitials = (name?: string) => {
-    if (!name) return 'U';
-    return name.split(' ').map((n) => n[0]).join('').toUpperCase().substring(0, 2);
+  const toggleLang = async () => {
+    const nextLang = i18n.language === 'fr' ? 'en' : 'fr';
+    await changeLanguage(nextLang);
   };
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.colors.background }]}>
-      <View style={[styles.header, { backgroundColor: theme.colors.primary }]}>
-        <Text style={styles.headerTitle}>Mon Profil</Text>
-      </View>
-
-      <ScrollView contentContainerStyle={styles.content}>
-        {/* Profile Card */}
-        <View style={[styles.profileCard, { backgroundColor: theme.colors.surface }]}>
-          <Avatar.Text
-            size={64}
-            label={getInitials(user?.name)}
-            style={{ backgroundColor: theme.colors.primaryContainer }}
-            color={theme.colors.onPrimaryContainer}
-          />
-          <View style={styles.profileInfo}>
-            <Text style={{ fontSize: 20, fontWeight: 'bold' }}>{user?.name || 'Visiteur'}</Text>
-            <Text style={{ color: theme.colors.onSurfaceVariant }}>{user?.email || 'Non connecté'}</Text>
-            {user?.phone && (
-              <Text style={{ color: theme.colors.onSurfaceVariant, fontSize: 12, marginTop: 4 }}>
-                <Icon name="phone" size={12} /> {user.phone}
-              </Text>
-            )}
+    <View style={styles.container}>
+      {/* ── Header ── */}
+      <View style={styles.headerWrapper}>
+        <View style={styles.headerContent}>
+          <TouchableOpacity onPress={() => router.back()} style={styles.headerBack}>
+            <Icon name="chevron-left" size={26} color="#0F172A" />
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>{t('settings.title')}</Text>
+          <View style={styles.headerRight}>
+            <TouchableOpacity style={styles.headerIcon}>
+              <Icon name="weather-night" size={22} color="#475569" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.headerIcon}>
+              <Icon name="cart-outline" size={22} color="#475569" />
+              <View style={styles.cartBadge} />
+            </TouchableOpacity>
           </View>
         </View>
+      </View>
 
-        {/* Menu Items */}
-        <View style={[styles.menuSection, { backgroundColor: theme.colors.surface }]}>
-          <List.Item
-            title="Mon véhicule"
-            description="Gérer les informations de votre voiture"
-            left={(props) => <List.Icon {...props} icon="car-cog" color={theme.colors.primary} />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+      <ScrollView
+        style={styles.scroll}
+        contentContainerStyle={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+      >
+        <View style={styles.card}>
+          <ToggleRow
+            label={t('settings.darkMode')}
+            value={darkMode}
+            onValueChange={setDarkMode}
           />
-          <Divider />
-          <List.Item
-            title="Mes favoris"
-            description="Pièces sauvegardées"
-            left={(props) => <List.Icon {...props} icon="heart" color={theme.colors.error} />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+          <ToggleRow
+            label={t('settings.pushNotif')}
+            value={pushNotif}
+            onValueChange={setPushNotif}
           />
-          <Divider />
-          <List.Item
-            title="Historique des commandes"
-            left={(props) => <List.Icon {...props} icon="history" color={theme.colors.onSurfaceVariant} />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+          <ToggleRow
+            label={t('settings.emailNotif')}
+            value={emailNotif}
+            onValueChange={setEmailNotif}
+          />
+          <ToggleRow
+            label={t('settings.smsNotif')}
+            value={smsNotif}
+            onValueChange={setSmsNotif}
+            isLast
           />
         </View>
 
-        <View style={[styles.menuSection, { backgroundColor: theme.colors.surface }]}>
-          <List.Item
-            title="Paramètres du compte"
-            left={(props) => <List.Icon {...props} icon="cog-outline" color={theme.colors.onSurfaceVariant} />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+        <View style={styles.card}>
+          <LanguageSelectorRow
+            label={t('settings.language')}
+            currentLang={i18n.language}
+            onChange={(lang) => changeLanguage(lang)}
           />
-          <Divider />
-          <List.Item
-            title="Support client"
-            left={(props) => <List.Icon {...props} icon="help-circle-outline" color={theme.colors.onSurfaceVariant} />}
-            right={(props) => <List.Icon {...props} icon="chevron-right" />}
-            onPress={() => {}}
+          <ValueRow
+            label={t('settings.currency')}
+            value={t('settings.currencyValue')}
+          />
+          <ValueRow
+            label={t('settings.privacy')}
+            onPress={() => { }}
+            isLast
+            arrow
           />
         </View>
 
-        <View style={styles.logoutSection}>
-          {user ? (
-            <Button
-              mode="outlined"
-              textColor={theme.colors.error}
-              style={{ borderColor: theme.colors.error }}
-              onPress={handleLogout}
-              icon="logout"
-            >
-              Se déconnecter
-            </Button>
-          ) : (
-            <Button
-              mode="contained"
-              onPress={() => router.replace('/')}
-              icon="login"
-            >
-              Se connecter
-            </Button>
-          )}
-        </View>
-
-        <Text style={styles.version}>Version 1.0.0</Text>
       </ScrollView>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  header: {
-    paddingTop: 60,
-    paddingBottom: 20,
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+  container: { flex: 1, backgroundColor: '#F8FAFC' },
+
+  // ── Header ──
+  headerWrapper: {
+    backgroundColor: '#fff',
+    paddingTop: Platform.OS === 'ios' ? 26 : 0,
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
   },
-  headerTitle: { fontSize: 20, fontWeight: 'bold', color: '#fff' },
-  content: { padding: 16, paddingBottom: 40 },
-  profileCard: {
+  headerContent: {
     flexDirection: 'row',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  headerBack: {
+    padding: 4,
+    marginRight: 12,
+  },
+  headerTitle: {
+    flex: 1,
+    fontSize: 18,
+    fontFamily: 'Inter-Bold',
+    color: '#0F172A',
+  },
+  headerRight: {
+    flexDirection: 'row',
+    gap: 16,
+    marginRight: 4,
+  },
+  headerIcon: {
+    position: 'relative',
+    padding: 4,
+  },
+  cartBadge: {
+    position: 'absolute',
+    top: 4,
+    right: 2,
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#EF4444',
+  },
+
+  // ── Body ──
+  scroll: { flex: 1 },
+  scrollContent: { padding: 16, paddingTop: 20 },
+
+  card: {
+    backgroundColor: '#fff',
     borderRadius: 16,
-    marginTop: -40,
     marginBottom: 20,
-    elevation: 4,
-    boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    paddingHorizontal: 16,
   },
-  profileInfo: { marginLeft: 16, flex: 1 },
-  menuSection: {
-    borderRadius: 16,
-    marginBottom: 20,
-    overflow: 'hidden',
+
+  // ── Row ──
+  row: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 16,
+    minHeight: 56,
   },
-  logoutSection: {
-    marginTop: 10,
-    marginBottom: 20,
+  rowBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: '#F1F5F9',
   },
-  version: {
-    textAlign: 'center',
-    color: '#9ca3af',
+  rowLabel: {
+    fontSize: 14,
+    fontFamily: 'Inter-Medium',
+    color: '#334155',
+  },
+  rowRight: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+  rowValue: {
+    fontSize: 13,
+    fontFamily: 'Inter-Regular',
+    color: '#64748B',
+  },
+
+  // ── Language Pills ──
+  langPills: {
+    flexDirection: 'row',
+    backgroundColor: '#F1F5F9',
+    borderRadius: 8,
+    padding: 3,
+    gap: 2,
+  },
+  langPill: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 6,
+  },
+  langPillActive: {
+    backgroundColor: '#fff',
+    boxShadow: '0px 1px 3px rgba(0, 0, 0, 0.1)',
+  },
+  langPillText: {
     fontSize: 12,
+    fontFamily: 'Inter-Medium',
+    color: '#64748B',
+  },
+  langPillTextActive: {
+    color: '#4F46E5',
+    fontFamily: 'Inter-Bold',
   },
 });

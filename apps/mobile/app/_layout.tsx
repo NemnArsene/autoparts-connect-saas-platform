@@ -7,6 +7,8 @@ import { theme } from '../src/theme';
 import { View, ActivityIndicator } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Inter_400Regular, Inter_500Medium, Inter_600SemiBold, Inter_700Bold, Inter_800ExtraBold } from '@expo-google-fonts/inter';
+import { I18nextProvider } from 'react-i18next';
+import i18n, { initI18n } from '../src/i18n';
 
 // Override default storage adapter for Zustand stores with AsyncStorage
 setAppStorageAdapter({
@@ -81,21 +83,32 @@ export default function RootLayout() {
     'Inter-Bold': Inter_700Bold,
     'Inter-ExtraBold': Inter_800ExtraBold,
   });
+  const [i18nReady, setI18nReady] = useState(false);
 
-  if (!fontsLoaded) {
-    return null; // Keep splash screen until fonts are loaded
+  useEffect(() => {
+    initI18n().then(() => setI18nReady(true));
+  }, []);
+
+  if (!fontsLoaded || !i18nReady) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', backgroundColor: '#6C3CE1' }}>
+        <ActivityIndicator size="large" color="white" />
+      </View>
+    );
   }
 
   return (
-    <PaperProvider theme={theme}>
-      <AuthGuard>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="login" />
-          <Stack.Screen name="register" />
-          <Stack.Screen name="onboarding" />
-          <Stack.Screen name="(client)" />
-        </Stack>
-      </AuthGuard>
-    </PaperProvider>
+    <I18nextProvider i18n={i18n}>
+      <PaperProvider theme={theme}>
+        <AuthGuard>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="login" />
+            <Stack.Screen name="register" />
+            <Stack.Screen name="onboarding" />
+            <Stack.Screen name="(client)" />
+          </Stack>
+        </AuthGuard>
+      </PaperProvider>
+    </I18nextProvider>
   );
 }

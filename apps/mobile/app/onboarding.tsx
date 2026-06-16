@@ -13,49 +13,38 @@ import {
 import { useRouter } from 'expo-router';
 import { useOnboardingStore } from '@autoparts/hooks';
 import Svg, { Path, Circle, Rect, Defs, LinearGradient as SvgLinearGradient, Stop } from 'react-native-svg';
+import { useTranslation } from 'react-i18next';
 
 const { width: W, height: H } = Dimensions.get('window');
 
 const SLIDES = [
   {
     id: 1,
-    title: 'Bienvenue sur\nAutoParts Connect',
-    subtitle: 'La première plateforme qui vous permet de trouver et réserver une pièce automobile en moins de 30 secondes.',
     bg1: '#6C3CE1',
     bg2: '#4A1FA8',
     accent: '#A78BFA',
     illustration: 'welcome',
-    badge: '5000+ pièces disponibles',
   },
   {
     id: 2,
-    title: 'Trouvez la pièce\nqu\'il vous faut',
-    subtitle: 'Recherchez par marque, modèle ou référence. Notre catalogue de 5000+ pièces est à votre portée.',
     bg1: '#F59E0B',
     bg2: '#D97706',
     accent: '#FCD34D',
     illustration: 'search',
-    badge: '20 fournisseurs certifiés',
   },
   {
     id: 3,
-    title: 'Réservez en un\nclic, retirez vite',
-    subtitle: 'Réservez votre pièce en ligne et retirez-la auprès de votre fournisseur en toute confiance.',
     bg1: '#10B981',
     bg2: '#059669',
     accent: '#6EE7B7',
     illustration: 'reserve',
-    badge: '2000+ réservations/mois',
   },
   {
     id: 4,
-    title: 'Disponible\nhors connexion',
-    subtitle: 'Consultez le catalogue, vos réservations et votre profil même sans internet grâce à notre mode offline.',
     bg1: '#3B82F6',
     bg2: '#2563EB',
     accent: '#93C5FD',
     illustration: 'offline',
-    badge: 'Mode PWA & Offline First',
   },
 ];
 
@@ -139,11 +128,12 @@ const ILLUSTRATIONS: Record<string, React.FC<{ accent: string }>> = {
 };
 
 export default function OnboardingScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
   const { completeOnboarding } = useOnboardingStore();
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollRef = useRef<ScrollView>(null);
-  
+
   // Make sure width is reliable on web
   const [winWidth, setWinWidth] = useState(W);
   useEffect(() => {
@@ -178,21 +168,21 @@ export default function OnboardingScreen() {
 
       {/* Dynamic Background */}
       <View style={StyleSheet.absoluteFill}>
-         <Svg width="100%" height="100%" preserveAspectRatio="none">
-            <Defs>
-              <SvgLinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
-                <Stop offset="0" stopColor={slide.bg1} />
-                <Stop offset="1" stopColor={slide.bg2} />
-              </SvgLinearGradient>
-            </Defs>
-            <Rect width="100%" height="100%" fill="url(#bgGrad)" />
-         </Svg>
+        <Svg width="100%" height="100%" preserveAspectRatio="none">
+          <Defs>
+            <SvgLinearGradient id="bgGrad" x1="0" y1="0" x2="0" y2="1">
+              <Stop offset="0" stopColor={slide.bg1} />
+              <Stop offset="1" stopColor={slide.bg2} />
+            </SvgLinearGradient>
+          </Defs>
+          <Rect width="100%" height="100%" fill="url(#bgGrad)" />
+        </Svg>
       </View>
 
       {/* Skip button */}
       {!isLast && (
         <TouchableOpacity style={styles.skipBtn} onPress={skip} activeOpacity={0.7}>
-          <Text style={styles.skipText}>Passer</Text>
+          <Text style={styles.skipText}>{t('onboarding.skip')}</Text>
         </TouchableOpacity>
       )}
 
@@ -216,12 +206,12 @@ export default function OnboardingScreen() {
 
               {/* Badge */}
               <View style={styles.badge}>
-                <Text style={styles.badgeText}>{s.badge}</Text>
+                <Text style={styles.badgeText}>{t(`onboarding.slides.${s.id}.badge`)}</Text>
               </View>
 
               {/* Texts */}
-              <Text style={styles.title}>{s.title}</Text>
-              <Text style={styles.subtitle}>{s.subtitle}</Text>
+              <Text style={styles.title}>{t(`onboarding.slides.${s.id}.title`)}</Text>
+              <Text style={styles.subtitle}>{t(`onboarding.slides.${s.id}.subtitle`)}</Text>
             </View>
           );
         })}
@@ -252,7 +242,7 @@ export default function OnboardingScreen() {
           activeOpacity={0.85}
         >
           <Text style={[styles.nextBtnText, { color: slide.bg2 }]}>
-            {isLast ? 'Commencer' : 'Suivant'}
+            {isLast ? t('onboarding.start') : t('onboarding.next')}
           </Text>
           <Text style={[styles.nextArrow, { color: slide.bg2 }]}>›</Text>
         </TouchableOpacity>

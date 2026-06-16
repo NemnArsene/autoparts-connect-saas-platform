@@ -1,32 +1,84 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform, Dimensions } from 'react-native';
-import { Text, TextInput, useTheme } from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Dimensions,
+} from 'react-native';
+import { Text, TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useOnboardingStore } from '@autoparts/hooks';
-import Svg, { Defs, LinearGradient, Stop, Rect, Circle, Path } from 'react-native-svg';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import Svg, { Circle, Path } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '../src/i18n';
 
-const { width } = Dimensions.get('window');
+const { height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 function AuthBackground() {
   return (
-    <View style={StyleSheet.absoluteFill}>
-      <Svg width="100%" height="100%" preserveAspectRatio="none">
-        <Defs>
-          <LinearGradient id="loginBgGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#6C3CE1" />
-            <Stop offset="0.5" stopColor="#9333EA" />
-            <Stop offset="1" stopColor="#F3F4F6" />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill="url(#loginBgGrad)" />
-      </Svg>
+    <LinearGradient
+      colors={['#6C3CE1', '#9333EA', '#F3F4F6']}
+      locations={[0, 0.55, 1]}
+      style={StyleSheet.absoluteFill}
+    />
+  );
+}
+
+function LanguageToggle({ currentLang, onToggle }: { currentLang: string; onToggle: (lang: 'fr' | 'en') => void }) {
+  return (
+    <View style={langStyles.container}>
+      <TouchableOpacity
+        style={[langStyles.pill, currentLang === 'fr' && langStyles.pillActive]}
+        onPress={() => onToggle('fr')}
+        activeOpacity={0.8}
+      >
+        <Text style={[langStyles.pillText, currentLang === 'fr' && langStyles.pillTextActive]}>
+          🇫🇷 FR
+        </Text>
+      </TouchableOpacity>
+      <TouchableOpacity
+        style={[langStyles.pill, currentLang === 'en' && langStyles.pillActive]}
+        onPress={() => onToggle('en')}
+        activeOpacity={0.8}
+      >
+        <Text style={[langStyles.pillText, currentLang === 'en' && langStyles.pillTextActive]}>
+          🇬🇧 EN
+        </Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
+const langStyles = StyleSheet.create({
+  container: {
+    flexDirection: 'row',
+    backgroundColor: 'rgba(255,255,255,0.15)',
+    borderRadius: 20,
+    padding: 4,
+    borderWidth: 1,
+    borderColor: 'rgba(255,255,255,0.25)',
+  },
+  pill: {
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 16,
+  },
+  pillActive: { backgroundColor: '#fff' },
+  pillText: {
+    color: 'rgba(255,255,255,0.75)',
+    fontSize: 12,
+    fontFamily: 'Inter-SemiBold',
+  },
+  pillTextActive: { color: '#6C3CE1' },
+});
+
 export default function LoginScreen() {
+  const { t, i18n } = useTranslation();
   const router = useRouter();
-  const theme = useTheme();
   const { login } = useAuthStore();
   const { resetOnboarding } = useOnboardingStore();
 
@@ -35,47 +87,56 @@ export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
 
+  const handleLanguageToggle = async (lang: 'fr' | 'en') => {
+    await changeLanguage(lang);
+  };
+
   const handleLogin = async () => {
     setLoading(true);
-    // Reset onboarding state so it shows up for testing
     resetOnboarding();
-    // Simulate API call
     setTimeout(async () => {
-      await login(
-        email || 'kouame@example.com',
-        password || '123456',
-        'client'
-      );
-      // The _layout AuthGuard will automatically redirect to onboarding or home
+      await login(email || 'kouame@example.com', password || '123456', 'client');
       setLoading(false);
     }, 1000);
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+    >
       <AuthBackground />
 
-      <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
+      {/* Fixed layout — no ScrollView */}
+      <View style={styles.inner}>
+
+        {/* Language toggle row */}
+        <View style={styles.topRow}>
+          <LanguageToggle currentLang={i18n.language} onToggle={handleLanguageToggle} />
+        </View>
+
+        {/* Logo + title */}
         <View style={styles.header}>
           <View style={styles.logoContainer}>
-            <Svg width={64} height={64} viewBox="0 0 64 64" fill="none">
+            <Svg width={56} height={56} viewBox="0 0 64 64" fill="none">
               <Circle cx="32" cy="32" r="32" fill="white" opacity={0.2} />
               <Circle cx="32" cy="32" r="24" fill="white" />
               <Path d="M32 18L35 27L44 27L36 32L39 42L32 36L25 42L28 32L20 27L29 27Z" fill="#6C3CE1" />
             </Svg>
           </View>
-          <Text style={styles.title}>Bienvenue</Text>
-          <Text style={styles.subtitle}>Connectez-vous pour continuer vers ASPS</Text>
+          <Text style={styles.title}>{t('login.welcome')}</Text>
+          <Text style={styles.subtitle}>{t('login.subtitle')}</Text>
         </View>
 
+        {/* Card form */}
         <View style={styles.card}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Adresse e-mail</Text>
+            <Text style={styles.label}>{t('login.email')}</Text>
             <TextInput
               mode="outlined"
               value={email}
               onChangeText={setEmail}
-              placeholder="votre@email.com"
+              placeholder={t('login.emailPlaceholder')}
               keyboardType="email-address"
               autoCapitalize="none"
               outlineColor="#E5E7EB"
@@ -86,7 +147,7 @@ export default function LoginScreen() {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('login.password')}</Text>
             <TextInput
               mode="outlined"
               value={password}
@@ -108,7 +169,7 @@ export default function LoginScreen() {
           </View>
 
           <TouchableOpacity style={styles.forgotBtn}>
-            <Text style={styles.forgotText}>Mot de passe oublié ?</Text>
+            <Text style={styles.forgotText}>{t('login.forgotPassword')}</Text>
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -117,21 +178,20 @@ export default function LoginScreen() {
             disabled={loading}
             activeOpacity={0.85}
           >
-            {loading ? (
-              <Text style={styles.loginBtnText}>Connexion en cours...</Text>
-            ) : (
-              <Text style={styles.loginBtnText}>Se connecter</Text>
-            )}
+            <Text style={styles.loginBtnText}>
+              {loading ? t('login.loginLoading') : t('login.loginBtn')}
+            </Text>
           </TouchableOpacity>
         </View>
 
+        {/* Footer */}
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Vous n'avez pas de compte ?</Text>
+          <Text style={styles.footerText}>{t('login.noAccount')}</Text>
           <TouchableOpacity onPress={() => router.push('/register')} activeOpacity={0.7}>
-            <Text style={styles.registerLink}>Créer un compte</Text>
+            <Text style={styles.registerLink}>{t('login.createAccount')}</Text>
           </TouchableOpacity>
         </View>
-      </ScrollView>
+      </View>
     </KeyboardAvoidingView>
   );
 }
@@ -141,31 +201,33 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#F3F4F6',
   },
-  scroll: {
-    flexGrow: 1,
-    justifyContent: 'center',
-    padding: 24,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+  inner: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: Platform.OS === 'ios' ? 56 : 36,
+    paddingBottom: Platform.OS === 'ios' ? 32 : 24,
+    justifyContent: 'space-between',
+  },
+  topRow: {
+    alignItems: 'flex-end',
   },
   header: {
     alignItems: 'center',
-    marginBottom: 40,
-    marginTop: 20,
   },
   logoContainer: {
-    marginBottom: 24,
+    marginBottom: 16,
     boxShadow: '0px 8px 24px rgba(0, 0, 0, 0.15)',
-    borderRadius: 32,
+    borderRadius: 28,
   },
   title: {
-    fontSize: 32,
+    fontSize: 28,
     fontFamily: 'Inter-ExtraBold',
     color: '#fff',
-    marginBottom: 8,
-    letterSpacing: -1,
+    marginBottom: 6,
+    letterSpacing: -0.8,
   },
   subtitle: {
-    fontSize: 15,
+    fontSize: 13,
     fontFamily: 'Inter-Medium',
     color: 'rgba(255,255,255,0.9)',
     textAlign: 'center',
@@ -173,58 +235,59 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#fff',
     borderRadius: 24,
-    padding: 24,
+    padding: 20,
     boxShadow: '0px 12px 32px rgba(0, 0, 0, 0.05)',
   },
   inputGroup: {
-    marginBottom: 16,
+    marginBottom: 14,
   },
   label: {
-    fontSize: 14,
+    fontSize: 13,
     fontFamily: 'Inter-SemiBold',
     color: '#374151',
-    marginBottom: 8,
+    marginBottom: 6,
   },
   input: {
     backgroundColor: '#F9FAFB',
     fontFamily: 'Inter-Regular',
+    fontSize: 14,
   },
   forgotBtn: {
     alignSelf: 'flex-end',
-    marginBottom: 24,
+    marginBottom: 20,
+    marginTop: -4,
   },
   forgotText: {
     color: '#6C3CE1',
     fontFamily: 'Inter-SemiBold',
-    fontSize: 13,
+    fontSize: 12,
   },
   loginBtn: {
     backgroundColor: '#6C3CE1',
     borderRadius: 16,
-    paddingVertical: 16,
+    paddingVertical: 15,
     alignItems: 'center',
     boxShadow: '0px 6px 16px rgba(108, 60, 225, 0.3)',
   },
   loginBtnText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 15,
     fontFamily: 'Inter-Bold',
   },
   footer: {
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 32,
-    gap: 8,
+    gap: 6,
   },
   footerText: {
     color: '#6B7280',
     fontFamily: 'Inter-Medium',
-    fontSize: 14,
+    fontSize: 13,
   },
   registerLink: {
     color: '#6C3CE1',
     fontFamily: 'Inter-Bold',
-    fontSize: 14,
+    fontSize: 13,
   },
 });

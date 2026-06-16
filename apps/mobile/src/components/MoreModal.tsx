@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { useRouter } from 'expo-router';
 import { useAuthStore } from '@autoparts/hooks';
+import { useTranslation } from 'react-i18next';
 import {
   UserIcon,
   CarIcon,
@@ -56,6 +57,7 @@ export const MoreModal: React.FC<MoreModalProps> = ({
   textColor,
   subtitleColor,
 }) => {
+  const { t } = useTranslation();
   const router = useRouter();
   const { user, logout } = useAuthStore();
   const translateY = useRef(new Animated.Value(SCREEN_HEIGHT)).current;
@@ -114,53 +116,53 @@ export const MoreModal: React.FC<MoreModalProps> = ({
 
   const menuItems: MoreMenuItem[] = [
     {
+      id: 'history',
+      label: t('more.history'),
+      subtitle: t('more.historySub'),
+      icon: HistoryIcon,
+      route: '/reservations',
+      requireAuth: true,
+    },
+    {
       id: 'profile',
-      label: 'Mon profil',
-      subtitle: 'Informations personnelles',
+      label: t('more.profile'),
+      subtitle: t('more.profileSub'),
       icon: UserIcon,
       route: '/profile',
       requireAuth: true,
     },
     {
       id: 'vehicles',
-      label: 'Mes véhicules',
-      subtitle: 'Gérer mes véhicules',
+      label: t('more.vehicles'),
+      subtitle: t('more.vehiclesSub'),
       icon: CarIcon,
-      route: '/profile',
-      requireAuth: true,
-    },
-    {
-      id: 'history',
-      label: 'Historique',
-      subtitle: 'Mes commandes passées',
-      icon: HistoryIcon,
-      route: '/reservations',
+      route: '/vehicles',
       requireAuth: true,
     },
     {
       id: 'favorites',
-      label: 'Favoris',
-      subtitle: 'Pièces sauvegardées',
+      label: t('more.favorites'),
+      subtitle: t('more.favoritesSub'),
       icon: HeartIcon,
       route: '/search',
     },
     {
       id: 'settings',
-      label: 'Paramètres',
-      subtitle: 'Langue, notifications...',
+      label: t('more.settings'),
+      subtitle: t('more.settingsSub'),
       icon: SettingsIcon,
       route: '/profile',
     },
     {
       id: 'support',
-      label: 'Support',
-      subtitle: 'Aide et contact',
+      label: t('more.support'),
+      subtitle: t('more.supportSub'),
       icon: SupportIcon,
       route: '/profile',
     },
     ...(user ? [{
       id: 'logout',
-      label: 'Déconnexion',
+      label: t('more.logout'),
       icon: LogoutIcon,
       danger: true,
       action: () => logout(),
@@ -217,15 +219,15 @@ export const MoreModal: React.FC<MoreModalProps> = ({
               <UserIcon color={primaryColor} size={26} />
             </View>
             <View style={{ flex: 1 }}>
-              <Text style={[styles.guestTitle, { color: textColor }]}>Visiteur</Text>
-              <Text style={[styles.guestSub, { color: subtitleColor }]}>Connectez-vous pour accéder à votre compte</Text>
+              <Text style={[styles.guestTitle, { color: textColor }]}>{t('more.guest')}</Text>
+              <Text style={[styles.guestSub, { color: subtitleColor }]}>{t('more.guestSub')}</Text>
             </View>
             <TouchableOpacity
               style={[styles.guestLoginBtn, { backgroundColor: primaryColor }]}
               onPress={() => { onClose(); setTimeout(() => router.push('/login'), 200); }}
               activeOpacity={0.85}
             >
-              <Text style={styles.guestLoginText}>Connexion</Text>
+              <Text style={styles.guestLoginText}>{t('more.loginBtn')}</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -270,7 +272,7 @@ export const MoreModal: React.FC<MoreModalProps> = ({
               onPress={() => { onClose(); setTimeout(() => router.push('/register'), 200); }}
               activeOpacity={0.85}
             >
-              <Text style={styles.registerCTAText}>Créer un compte gratuit</Text>
+            <Text style={styles.registerCTAText}>{t('more.registerCTA')}</Text>
             </TouchableOpacity>
           )}
 

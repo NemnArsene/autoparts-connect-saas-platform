@@ -1,31 +1,32 @@
 import React, { useState } from 'react';
-import { View, StyleSheet, TouchableOpacity, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
-import { Text, TextInput, useTheme } from 'react-native-paper';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ScrollView,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
+import { Text, TextInput } from 'react-native-paper';
 import { useRouter } from 'expo-router';
 import { useAuthStore, useOnboardingStore } from '@autoparts/hooks';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
+import { LinearGradient } from 'expo-linear-gradient';
+import { useTranslation } from 'react-i18next';
 
 function AuthBackground() {
   return (
-    <View style={StyleSheet.absoluteFill}>
-      <Svg width="100%" height="100%" preserveAspectRatio="none">
-        <Defs>
-          <LinearGradient id="registerBgGrad" x1="0" y1="0" x2="0" y2="1">
-            <Stop offset="0" stopColor="#6C3CE1" />
-            <Stop offset="0.3" stopColor="#9333EA" />
-            <Stop offset="1" stopColor="#F3F4F6" />
-          </LinearGradient>
-        </Defs>
-        <Rect width="100%" height="100%" fill="url(#registerBgGrad)" />
-      </Svg>
-    </View>
+    <LinearGradient
+      colors={['#6C3CE1', '#9333EA', '#F3F4F6']}
+      locations={[0, 0.3, 1]}
+      style={StyleSheet.absoluteFill}
+    />
   );
 }
 
 export default function RegisterScreen() {
+  const { t } = useTranslation();
   const router = useRouter();
-  const theme = useTheme();
   const { login } = useAuthStore();
   const { resetOnboarding } = useOnboardingStore();
 
@@ -37,42 +38,39 @@ export default function RegisterScreen() {
 
   const handleRegister = async () => {
     setLoading(true);
-    // Reset onboarding state so new users always see it
     resetOnboarding();
     setTimeout(async () => {
-      await login(
-        email || 'client@example.com',
-        password || '123456',
-        'client'
-      );
-      // The _layout AuthGuard will automatically redirect
+      await login(email || 'client@example.com', password || '123456', 'client');
       setLoading(false);
     }, 1000);
   };
 
   return (
-    <KeyboardAvoidingView style={styles.container} behavior={Platform.OS === 'ios' ? 'padding' : undefined}>
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+    >
       <AuthBackground />
-      
+
       <ScrollView contentContainerStyle={styles.scroll} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <View style={styles.titleRow}>
             <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
               <Icon name="arrow-left" size={24} color="#fff" />
             </TouchableOpacity>
-            <Text style={styles.title}>Créer un compte</Text>
+            <Text style={styles.title}>{t('register.title')}</Text>
           </View>
-          <Text style={styles.subtitle}>Rejoignez System for Reserving Car Spare Parts</Text>
+          <Text style={styles.subtitle}>{t('register.subtitle')}</Text>
         </View>
 
         <View style={styles.card}>
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Nom complet</Text>
+            <Text style={styles.label}>{t('register.fullName')}</Text>
             <TextInput
               mode="outlined"
               value={name}
               onChangeText={setName}
-              placeholder="Jean Dupont"
+              placeholder={t('register.fullNamePlaceholder')}
               outlineColor="#E5E7EB"
               activeOutlineColor="#6C3CE1"
               style={styles.input}
@@ -81,12 +79,12 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Adresse e-mail</Text>
+            <Text style={styles.label}>{t('register.email')}</Text>
             <TextInput
               mode="outlined"
               value={email}
               onChangeText={setEmail}
-              placeholder="jean.dupont@email.com"
+              placeholder={t('register.emailPlaceholder')}
               keyboardType="email-address"
               autoCapitalize="none"
               outlineColor="#E5E7EB"
@@ -97,7 +95,7 @@ export default function RegisterScreen() {
           </View>
 
           <View style={styles.inputGroup}>
-            <Text style={styles.label}>Mot de passe</Text>
+            <Text style={styles.label}>{t('register.password')}</Text>
             <TextInput
               mode="outlined"
               value={password}
@@ -121,8 +119,10 @@ export default function RegisterScreen() {
           <View style={styles.termsBox}>
             <Icon name="check-circle" size={20} color="#10B981" />
             <Text style={styles.termsText}>
-              J'accepte les <Text style={styles.termsLink}>Conditions d'utilisation</Text> et la{' '}
-              <Text style={styles.termsLink}>Politique de confidentialité</Text>.
+              {t('register.terms')}{' '}
+              <Text style={styles.termsLink}>{t('register.termsLink')}</Text>
+              {' '}{t('register.and')}{' '}
+              <Text style={styles.termsLink}>{t('register.privacyLink')}</Text>.
             </Text>
           </View>
 
@@ -132,18 +132,16 @@ export default function RegisterScreen() {
             disabled={loading}
             activeOpacity={0.85}
           >
-            {loading ? (
-              <Text style={styles.registerBtnText}>Création en cours...</Text>
-            ) : (
-              <Text style={styles.registerBtnText}>Créer mon compte</Text>
-            )}
+            <Text style={styles.registerBtnText}>
+              {loading ? t('register.registerLoading') : t('register.registerBtn')}
+            </Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.footer}>
-          <Text style={styles.footerText}>Vous avez déjà un compte ?</Text>
+          <Text style={styles.footerText}>{t('register.hasAccount')}</Text>
           <TouchableOpacity onPress={() => router.push('/login')} activeOpacity={0.7}>
-            <Text style={styles.loginLink}>Se connecter</Text>
+            <Text style={styles.loginLink}>{t('register.loginLink')}</Text>
           </TouchableOpacity>
         </View>
       </ScrollView>
@@ -159,7 +157,7 @@ const styles = StyleSheet.create({
   scroll: {
     flexGrow: 1,
     padding: 24,
-    paddingTop: Platform.OS === 'ios' ? 60 : 40,
+    paddingTop: Platform.OS === 'ios' ? 50 : 30,
   },
   header: {
     marginBottom: 32,

@@ -15,6 +15,7 @@ import {
 } from '../../src/components/Icons';
 import { MoreModal } from '../../src/components/MoreModal';
 import { useNotificationsStore } from '@autoparts/hooks';
+import { useTranslation } from 'react-i18next';
 
 // ── Custom Tab Bar ────────────────────────────────────────────────────────────
 interface TabItem {
@@ -26,19 +27,22 @@ interface TabItem {
   badgeKey?: 'notifications';
 }
 
-const TABS: TabItem[] = [
-  { name: 'index',              label: 'Accueil',      Icon: HomeIcon,   FillIcon: HomeFillIcon,   route: '/' },
-  { name: 'search/index',       label: 'Recherche',    Icon: SearchIcon, FillIcon: SearchFillIcon, route: '/search' },
-  { name: 'reservations/index', label: 'Réservations', Icon: BoxIcon,    FillIcon: BoxFillIcon,    route: '/reservations' },
-  { name: 'notifications',      label: 'Notifs',       Icon: BellIcon,   FillIcon: BellFillIcon,   route: '/notifications', badgeKey: 'notifications' },
-];
+// TABS is now built dynamically inside CustomTabBar to react to language changes
 
 function CustomTabBar() {
+  const { t } = useTranslation();
   const theme = useTheme();
   const pathname = usePathname();
   const router = useRouter();
   const [moreVisible, setMoreVisible] = useState(false);
   const { unreadCount } = useNotificationsStore();
+
+  const TABS: TabItem[] = [
+    { name: 'index',              label: t('tabs.home'),          Icon: HomeIcon,   FillIcon: HomeFillIcon,   route: '/' },
+    { name: 'search/index',       label: t('tabs.search'),        Icon: SearchIcon, FillIcon: SearchFillIcon, route: '/search' },
+    { name: 'reservations/index', label: t('tabs.reservations'),  Icon: BoxIcon,    FillIcon: BoxFillIcon,    route: '/reservations' },
+    { name: 'notifications',      label: t('tabs.notifications'), Icon: BellIcon,   FillIcon: BellFillIcon,   route: '/notifications', badgeKey: 'notifications' },
+  ];
 
   const primaryColor = theme.colors.primary;
   const backgroundColor = theme.colors.surface;
@@ -114,7 +118,7 @@ function CustomTabBar() {
           <View style={styles.iconWrapper}>
             <GridIcon color={inactiveColor} size={24} />
           </View>
-          <Text style={[styles.tabLabel, { color: inactiveColor, fontFamily: 'Inter-Medium' }]}>Autres</Text>
+          <Text style={[styles.tabLabel, { color: inactiveColor, fontFamily: 'Inter-Medium' }]}>{t('tabs.more')}</Text>
         </TouchableOpacity>
       </View>
 
@@ -147,6 +151,7 @@ export default function ClientTabsLayout() {
       <Tabs.Screen name="cart" options={{ href: null }} />
       <Tabs.Screen name="checkout" options={{ href: null }} />
       <Tabs.Screen name="profile/index" options={{ href: null }} />
+      <Tabs.Screen name="vehicles/index" options={{ href: null }} />
       <Tabs.Screen name="part/[id]" options={{ href: null }} />
     </Tabs>
   );
