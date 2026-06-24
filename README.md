@@ -47,7 +47,7 @@ pnpm --filter @autoparts/web dev
 ### 3. Lancer l'Application Mobile (Expo)
 Pour démarrer l'application mobile React Native :
 ```bash
-pnpm --filter @autoparts/mobile start
+
 ```
 - Un code QR va s'afficher dans le terminal.
 - **Sur Android** : Scannez-le avec l'application "Expo Go".

@@ -3,7 +3,7 @@ import { Search as SearchIcon, X, SlidersHorizontal, Star, Heart, MapPin, Shield
 import { useApp } from '../../store/AppContext';
 import { PARTS, CATEGORIES, BRANDS, formatPrice } from '../../data/seed';
 import { PartImage } from '../../components/PartImage';
-import { PartCard } from './HomePage';
+import { PartCard, WhatsAppIcon, openWA } from './HomePage';
 
 export function SearchPage() {
   const { searchQuery, setSearchQuery, setSelectedPart, setClientPage, favorites, toggleFavorite, addToCart } = useApp();
@@ -177,10 +177,10 @@ export function PartDetailPage() {
   const isFav = favorites.includes(selectedPart.id);
 
   return (
-    <div className="animate-fade-in space-y-4 pb-24">
+    <div className="animate-fade-in space-y-4 pb-36">
       <div className={`relative -mx-4 md:mx-0 md:rounded-3xl overflow-hidden bg-gradient-to-br ${selectedPart.image} md:aspect-[16/9] aspect-square md:aspect-auto`}>
-        <div className="absolute inset-0 flex items-center justify-center">
-          <PartImage category={selectedPart.category} gradient={cat?.color || ''} size="xl" className="!h-48 !w-48 md:!h-64 md:!w-64" />
+        <div className="absolute inset-0 flex items-center justify-center bg-white/10">
+          <PartImage category={selectedPart.category} gradient={cat?.color || ''} size="xl" className="!h-48 !w-48 md:!h-64 md:!w-64" partName={selectedPart.name} />
         </div>
         {selectedPart.isPromo && selectedPart.oldPrice && (
           <span className="absolute left-4 top-4 badge bg-rose-500 text-white">-{Math.round((1 - selectedPart.price/selectedPart.oldPrice)*100)}%</span>
@@ -212,9 +212,23 @@ export function PartDetailPage() {
           </div>
         </div>
 
-        <div className="flex items-end gap-2">
-          <div className="text-3xl font-extrabold text-slate-900 dark:text-white">{formatPrice(selectedPart.price)}</div>
-          {selectedPart.oldPrice && <div className="text-base text-slate-400 line-through">{formatPrice(selectedPart.oldPrice)}</div>}
+        {/* Prix + bouton WhatsApp */}
+        <div className="space-y-2">
+          <div className="flex items-end gap-2">
+            <div className="text-3xl font-extrabold text-slate-900 dark:text-white">{formatPrice(selectedPart.price)}</div>
+            {selectedPart.oldPrice && <div className="text-base text-slate-400 line-through">{formatPrice(selectedPart.oldPrice)}</div>}
+          </div>
+
+          {/* Bouton WhatsApp — même fenêtre, pas de target='_blank' */}
+          <button
+            onClick={() => openWA(selectedPart.name, String(selectedPart.price))}
+            className="flex w-full items-center justify-center gap-2 rounded-2xl py-3 text-sm font-bold text-white transition hover:brightness-110 active:scale-[0.98] shadow-lg"
+            style={{ backgroundColor: '#25D366', boxShadow: '0 4px 20px rgba(37,211,102,0.35)' }}
+            id="whatsapp-order-btn"
+          >
+            <WhatsAppIcon className="h-5 w-5" />
+            Commander sur WhatsApp
+          </button>
         </div>
 
         <div className="grid grid-cols-3 gap-2 pt-2">
@@ -248,7 +262,7 @@ export function PartDetailPage() {
       <div className="card p-4">
         <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Description</h2>
         <p className="text-sm text-slate-600 dark:text-slate-300 leading-relaxed">
-          Pièce {selectedPart.name.toLowerCase()} de qualité premium compatible avec les véhicules {selectedPart.brand} sélectionnés. Testée et certifiée par nos experts. Installation recommandée par un professionnel agréé.
+          Pièce {selectedPart.name.toLowerCase()} de qualité premium compatible avec les véhicules {selectedPart.brand} sélectionnés. Testée et certifiée par nos experts. Installation recommandée par un professionnel agréé. Autopart Connects garantit des pièces d'origine livrables à Yaoundé, Douala et dans toutes les grandes villes du Cameroun.
         </p>
         <div className="mt-4 grid grid-cols-2 gap-3">
           <div>
@@ -270,7 +284,7 @@ export function PartDetailPage() {
         </div>
       </div>
 
-      {/* Sticky CTA */}
+      {/* Sticky CTA — Panier + WhatsApp */}
       <div className="fixed bottom-20 left-0 right-0 z-30 border-t border-slate-200 bg-white/95 p-3 backdrop-blur-xl md:bottom-0 dark:border-slate-800 dark:bg-slate-950/95">
         <div className="mx-auto flex max-w-7xl items-center gap-2">
           <button
@@ -280,10 +294,18 @@ export function PartDetailPage() {
             <Plus className="h-4 w-4" /> Panier
           </button>
           <button
+            onClick={() => openWA(selectedPart.name, String(selectedPart.price))}
+            className="flex flex-1 items-center justify-center gap-2 rounded-2xl py-2.5 text-sm font-bold text-white transition hover:brightness-110"
+            style={{ backgroundColor: '#25D366' }}
+          >
+            <WhatsAppIcon className="h-4 w-4" />
+            WhatsApp
+          </button>
+          <button
             onClick={() => { addToCart(selectedPart); setClientPage('cart'); }}
             className="btn-primary flex-1"
           >
-            Réserver maintenant
+            Réserver
           </button>
         </div>
       </div>

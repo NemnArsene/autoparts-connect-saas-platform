@@ -1,0 +1,319 @@
+{
+  "common": {
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "search": "Rechercher…",
+    "loading": "Chargement...",
+    "action": "Action",
+    "status": "Statut",
+    "date": "Date",
+    "edit": "Éditer",
+    "delete": "Supprimer",
+    "details": "Détails",
+    "close": "Fermer",
+    "back": "Précédent",
+    "next": "Suivant",
+    "currency": "XAF"
+  },
+  "menu": {
+    "groups": {
+      "pilotage": "Pilotage",
+      "gestion": "Gestion",
+      "operations": "Opérations"
+    },
+    "dashboard": "Dashboard",
+    "reports": "Rapports",
+    "users": "Utilisateurs",
+    "suppliers": "Fournisseurs",
+    "catalog": "Catalogue",
+    "stock": "Stocks",
+    "reservations": "Réservations",
+    "payments": "Paiements",
+    "cms": "CMS",
+    "settings": "Configuration"
+  },
+  "header": {
+    "searchPlaceholder": "Rechercher…",
+    "theme": "Thème",
+    "admin": "Administrateur"
+  },
+  "login": {
+    "title": "AutoParts",
+    "subtitle": "Administration Dashboard",
+    "emailLabel": "Adresse Email",
+    "emailPlaceholder": "admin@autoparts.cm",
+    "passwordLabel": "Mot de passe",
+    "forgotPassword": "Oublié ?",
+    "submitBtn": "Connexion au tableau de bord",
+    "loading": "Connexion en cours...",
+    "copyright": "© 2026 AutoParts Connect. Tous droits réservés."
+  },
+  "meta": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Vue d'ensemble de la plateforme"
+    },
+    "users": {
+      "title": "Utilisateurs",
+      "subtitle": "8 421 comptes clients et administrateurs"
+    },
+    "suppliers": {
+      "title": "Fournisseurs",
+      "subtitle": "20 partenaires validés"
+    },
+    "catalog": {
+      "title": "Catalogue",
+      "subtitle": "5 000+ pièces référencées"
+    },
+    "stock": {
+      "title": "Stocks",
+      "subtitle": "Suivi des inventaires en temps réel"
+    },
+    "reservations": {
+      "title": "Réservations",
+      "subtitle": "2 154 commandes en cours"
+    },
+    "payments": {
+      "title": "Paiements",
+      "subtitle": "Transactions et règlements"
+    },
+    "cms": {
+      "title": "CMS",
+      "subtitle": "Gestion de contenu"
+    },
+    "reports": {
+      "title": "Rapports",
+      "subtitle": "Analyses et exports"
+    },
+    "settings": {
+      "title": "Configuration",
+      "subtitle": "Paramètres de la plateforme"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "revenue": "Chiffre d'affaires",
+      "reservations": "Réservations",
+      "activeUsers": "Utilisateurs actifs",
+      "partsSold": "Pièces vendues"
+    },
+    "revenueEvolution": {
+      "title": "Évolution du chiffre d'affaires",
+      "subtitle": "12 derniers mois · Millions XAF"
+    },
+    "topCategories": {
+      "title": "Top catégories",
+      "subtitle": "Répartition des pièces"
+    },
+    "reservationsByBrand": {
+      "title": "Réservations par marque",
+      "subtitle": "Volume mensuel"
+    },
+    "topSuppliers": {
+      "title": "Top fournisseurs",
+      "subtitle": "Par performance",
+      "productsCount": "produits"
+    },
+    "recentReservations": {
+      "title": "Dernières réservations",
+      "seeAll": "Voir tout"
+    },
+    "alerts": {
+      "title": "Alertes",
+      "lowStock": "Stock faible",
+      "lowStockDesc": "12 produits à réapprovisionner",
+      "pendingOrders": "Commandes en attente",
+      "pendingOrdersDesc": "24 réservations à valider",
+      "newUsers": "Nouveaux utilisateurs",
+      "newUsersDesc": "47 inscriptions aujourd'hui"
+    }
+  },
+  "users": {
+    "title": "Liste des utilisateurs",
+    "addBtn": "Ajouter un utilisateur",
+    "searchPlaceholder": "Rechercher un utilisateur...",
+    "table": {
+      "name": "Nom",
+      "role": "Rôle",
+      "status": "Statut",
+      "joined": "Date d'inscription"
+    }
+  },
+  "suppliers": {
+    "title": "Liste des fournisseurs",
+    "addBtn": "Ajouter un fournisseur",
+    "searchPlaceholder": "Rechercher un fournisseur...",
+    "table": {
+      "name": "Nom",
+      "location": "Localisation",
+      "rating": "Rating",
+      "products": "Produits"
+    }
+  },
+  "catalog": {
+    "title": "Liste des pièces détachées",
+    "addBtn": "Ajouter une pièce",
+    "exportBtn": "Exporter 5000 pièces",
+    "searchPlaceholder": "Rechercher une pièce...",
+    "table": {
+      "ref": "Référence",
+      "name": "Désignation",
+      "category": "Catégorie",
+      "compatibility": "Compatibilité",
+      "price": "Prix",
+      "stock": "Stock",
+      "supplier": "Fournisseur"
+    },
+    "addModal": {
+      "title": "Ajouter une pièce au catalogue",
+      "steps": {
+        "basic": "Informations de base",
+        "pricing": "Prix & Stock",
+        "details": "Description & Détails"
+      },
+      "form": {
+        "partName": "Nom de la pièce",
+        "reference": "Référence",
+        "referenceAuto": "Générer automatiquement",
+        "brand": "Marque",
+        "selectBrand": "Sélectionner la marque",
+        "compat": "Modèle compatible",
+        "category": "Catégorie",
+        "selectCategory": "Sélectionner la catégorie",
+        "price": "Prix (XAF)",
+        "stockQty": "Quantité en stock",
+        "supplier": "Fournisseur",
+        "selectSupplier": "Sélectionner le fournisseur",
+        "description": "Description de la pièce",
+        "specs": "Caractéristiques techniques (optionnel)",
+        "specsPlaceholder": "Ex: Filetage: M14x1.5, Longueur: 120mm..."
+      },
+      "validation": {
+        "nameReq": "Le nom de la pièce est requis",
+        "brandReq": "La marque est requise",
+        "categoryReq": "La catégorie est requise",
+        "priceMin": "Le prix doit être supérieur à 0",
+        "stockMin": "La quantité doit être supérieure ou égale à 0",
+        "supplierReq": "Le fournisseur est requis"
+      },
+      "successTitle": "Pièce ajoutée !",
+      "successMessage": "La pièce a été ajoutée avec succès au catalogue.",
+      "submitBtn": "Confirmer et ajouter"
+    },
+    "exportModal": {
+      "title": "Centre d'exportation de données",
+      "subtitle": "Choisissez le format d'exportation pour les 5 000 pièces actuellement référencées.",
+      "formats": {
+        "csv": {
+          "title": "CSV (Excel standard)",
+          "desc": "Idéal pour les importations dans des bases de données ou des tableurs légers."
+        },
+        "xlsx": {
+          "title": "Excel (.xlsx)",
+          "desc": "Format de classeur natif avec styles, idéal pour l'analyse financière."
+        },
+        "pdf": {
+          "title": "Document PDF (.pdf)",
+          "desc": "Document prêt à imprimer avec tableau formaté et en-tête professionnel."
+        }
+      },
+      "status": {
+        "generating": "Génération du fichier en cours...",
+        "success": "Téléchargement réussi !",
+        "error": "Une erreur est survenue lors de l'exportation."
+      },
+      "download": "Télécharger le fichier"
+    }
+  },
+  "stock": {
+    "title": "Gestion des inventaires",
+    "updateBtn": "Mettre à jour le stock",
+    "searchPlaceholder": "Filtrer par référence ou désignation...",
+    "table": {
+      "ref": "Référence",
+      "name": "Nom de la pièce",
+      "location": "Emplacement",
+      "status": "État"
+    }
+  },
+  "reservations": {
+    "title": "Suivi des commandes",
+    "searchPlaceholder": "Rechercher une référence ou un client...",
+    "table": {
+      "ref": "Réf",
+      "client": "Client",
+      "part": "Pièce",
+      "amount": "Montant"
+    }
+  },
+  "payments": {
+    "title": "Transactions et règlements",
+    "stats": {
+      "total": "Volume total",
+      "transactions": "Transactions",
+      "pending": "En attente",
+      "refunds": "Remboursements"
+    },
+    "chartTitle": "Volume des paiements (7 derniers jours)",
+    "methods": {
+      "momo": "Mobile Money",
+      "card": "Carte bancaire",
+      "cod": "Paiement à la livraison"
+    }
+  },
+  "cms": {
+    "title": "Gestion de contenu",
+    "status": {
+      "published": "Publié",
+      "draft": "Brouillon"
+    },
+    "actions": {
+      "edit": "Éditer",
+      "preview": "Aperçu"
+    },
+    "newContent": {
+      "title": "Créer un nouveau contenu",
+      "titlePlaceholder": "Titre du contenu",
+      "descPlaceholder": "Description…",
+      "draft": "Brouillon",
+      "publish": "Publier"
+    }
+  },
+  "reports": {
+    "title": "Rapports disponibles",
+    "subtitle": "Générez des rapports détaillés sur votre activité",
+    "sales": {
+      "title": "Rapport des ventes",
+      "desc": "Détails par période, catégorie, fournisseur"
+    },
+    "users": {
+      "title": "Rapport utilisateurs",
+      "desc": "Inscriptions, activité, comportement"
+    },
+    "inventory": {
+      "title": "Rapport inventaire",
+      "desc": "Stock, mouvements, valorisations"
+    },
+    "financial": {
+      "title": "Rapport financier",
+      "desc": "Revenus, commissions, taxes"
+    }
+  },
+  "settings": {
+    "title": "Paramètres généraux",
+    "platformName": "Nom de la plateforme",
+    "contactEmail": "Email de contact",
+    "currency": "Devise",
+    "timezone": "Fuseau horaire",
+    "security": {
+      "title": "Sécurité & API",
+      "twoFactor": "Authentification à deux facteurs",
+      "twoFactorDesc": "SMS OTP pour tous les admins",
+      "rateLimit": "Rate limiting API",
+      "rateLimitDesc": "100 req/min par utilisateur",
+      "auditLogs": "Audit logs",
+      "auditLogsDesc": "Toutes les actions sensibles sont tracées",
+      "enabled": "Activé"
+    }
+  }
+}

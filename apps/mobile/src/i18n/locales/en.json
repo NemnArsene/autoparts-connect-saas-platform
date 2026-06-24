@@ -47,9 +47,9 @@
     }
   },
   "common": {
-    "appName": "ASPS",
-    "appTitle": "System for Reserving",
-    "appSubtitle": "Car Spare Parts (ASPS)",
+    "appName": "autopart connect ",
+    "appTitle": "autopart connect",
+    "appSubtitle": "System for Reserving",
     "seeAll": "View all",
     "manage": "Manage",
     "loading": "Loading...",
@@ -65,7 +65,7 @@
   },
   "login": {
     "welcome": "Welcome",
-    "subtitle": "Sign in to continue to ASPS",
+    "subtitle": "Sign in to continue to Autopart Connect",
     "email": "Email address",
     "emailPlaceholder": "your@email.com",
     "password": "Password",
@@ -77,7 +77,7 @@
   },
   "register": {
     "title": "Create account",
-    "subtitle": "Join System for Reserving Car Spare Parts",
+    "subtitle": "Join Autopart Connect",
     "fullName": "Full name",
     "fullNamePlaceholder": "John Doe",
     "email": "Email address",
@@ -220,6 +220,17 @@
     "aboutApp": "About the application"
   },
   "technician": {
+    "sos": {
+      "title": "Emergency SOS Technician",
+      "subtitle": "Car trouble on the road? Our experts intervene immediately.",
+      "call": "Normal Call",
+      "whatsapp": "WhatsApp Message",
+      "contactModalTitle": "Contact {{name}}",
+      "contactModalSub": "Choose the preferred contact method for this emergency technician.",
+      "chouibouSpec": "Emergency filtration and electricity expert",
+      "mohamedSpec": "Engine breakdowns and transmission specialist",
+      "axelSpec": "Brake, suspension, and rapid diagnosis expert"
+    },
     "title": "Contact a Technician",
     "bannerTitle": "Need a technician?",
     "bannerSub": "Contact an auto expert directly from the app",

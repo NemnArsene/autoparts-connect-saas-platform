@@ -1,4 +1,4 @@
-import { View, ScrollView, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
 import { Text, Button, Chip } from 'react-native-paper';
 import { useLocalSearchParams, useRouter } from 'expo-router';
 import { useCartStore, useFavoritesStore } from '@autoparts/hooks';
@@ -6,6 +6,7 @@ import { PARTS, CATEGORIES, formatPrice } from '@autoparts/models';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Svg, { G, Circle, Path } from 'react-native-svg';
 import { TopHeader } from '../../../src/components/TopHeader';
+import { getPartImage } from '../../../src/components/partImages';
 import { useState } from 'react';
 
 export default function PartDetailScreen() {
@@ -38,14 +39,22 @@ export default function PartDetailScreen() {
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero image */}
         <View style={styles.heroBox}>
-          <Svg viewBox="0 0 100 100" width={120} height={120}>
-            <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
-              <Circle cx="50" cy="50" r="26" />
-              <Circle cx="50" cy="50" r="16" />
-              <Circle cx="50" cy="50" r="6" fill="white" />
-              <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
-            </G>
-          </Svg>
+          {getPartImage(part.name) ? (
+            <Image
+              source={getPartImage(part.name)}
+              style={styles.heroRealImage}
+              resizeMode="contain"
+            />
+          ) : (
+            <Svg viewBox="0 0 100 100" width={120} height={120}>
+              <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
+                <Circle cx="50" cy="50" r="26" />
+                <Circle cx="50" cy="50" r="16" />
+                <Circle cx="50" cy="50" r="6" fill="white" />
+                <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
+              </G>
+            </Svg>
+          )}
 
           {part.isPromo && part.oldPrice && (
             <View style={styles.heroBadge}>
@@ -152,33 +161,49 @@ export default function PartDetailScreen() {
 
       {/* Footer CTA with quantity */}
       <View style={styles.footer}>
-        <View style={styles.qtyRow}>
+        <View style={styles.footerTopRow}>
+          <View style={styles.qtyRow}>
+            <TouchableOpacity
+              style={styles.qtyBtn}
+              onPress={() => setQuantity(Math.max(1, quantity - 1))}
+              activeOpacity={0.7}
+            >
+              <Icon name="minus" size={16} color="#64748b" />
+            </TouchableOpacity>
+            <Text style={styles.qtyNum}>{quantity}</Text>
+            <TouchableOpacity
+              style={styles.qtyBtn}
+              onPress={() => setQuantity(quantity + 1)}
+              activeOpacity={0.7}
+            >
+              <Icon name="plus" size={16} color="#64748b" />
+            </TouchableOpacity>
+          </View>
+
           <TouchableOpacity
-            style={styles.qtyBtn}
-            onPress={() => setQuantity(Math.max(1, quantity - 1))}
-            activeOpacity={0.7}
+            style={styles.addBtn}
+            activeOpacity={0.85}
+            onPress={() => {
+              addToCart(part, quantity);
+              router.push('/cart');
+            }}
           >
-            <Icon name="minus" size={16} color="#64748b" />
-          </TouchableOpacity>
-          <Text style={styles.qtyNum}>{quantity}</Text>
-          <TouchableOpacity
-            style={styles.qtyBtn}
-            onPress={() => setQuantity(quantity + 1)}
-            activeOpacity={0.7}
-          >
-            <Icon name="plus" size={16} color="#64748b" />
+            <Text style={styles.addBtnText}>Ajouter au panier</Text>
           </TouchableOpacity>
         </View>
 
+        {/* WhatsApp Order Button */}
         <TouchableOpacity
-          style={styles.addBtn}
+          style={styles.waBtn}
           activeOpacity={0.85}
           onPress={() => {
-            addToCart(part, quantity);
-            router.push('/cart');
+            const priceStr = formatPrice(totalPrice);
+            const msg = `Bonjour VizuParts, je veux ${part.name} (x${quantity}) \u00e0 ${priceStr}`;
+            Linking.openURL(`https://wa.me/237696567184?text=${encodeURIComponent(msg)}`);
           }}
         >
-          <Text style={styles.addBtnText}>Ajouter au panier</Text>
+          <Icon name="whatsapp" size={18} color="#fff" />
+          <Text style={styles.waBtnText}>Commander sur WhatsApp</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -196,6 +221,11 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'relative',
+  },
+  heroRealImage: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#f8fafc',
   },
   heroBadge: {
     position: 'absolute',
@@ -325,12 +355,15 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     padding: 12,
     paddingBottom: 7,
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 10,
+    gap: 8,
     borderTopWidth: 1,
     borderTopColor: '#f1f5f9',
     boxShadow: '0 -4px 16px rgba(0,0,0,0.06)',
+  },
+  footerTopRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
   },
   qtyRow: {
     flexDirection: 'row',
@@ -353,4 +386,18 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   addBtnText: { fontFamily: 'Inter-Bold', fontSize: 15, color: '#fff' },
+  waBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#25D366',
+    borderRadius: 14,
+    paddingVertical: 12,
+    gap: 8,
+  },
+  waBtnText: {
+    color: '#fff',
+    fontFamily: 'Inter-Bold',
+    fontSize: 14,
+  },
 });

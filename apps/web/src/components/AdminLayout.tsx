@@ -2,29 +2,34 @@ import { LayoutDashboard, Users, Truck, Package, Boxes, ShoppingBag, CreditCard,
 import { useApp } from '../store/AppContext';
 import { Logo } from './Logo';
 import type { ReactNode } from 'react';
+import { useTranslation } from 'react-i18next';
+import { changeLanguage } from '../i18n';
 
 const MENUS = [
-  { id: 'dashboard', label: 'Dashboard', icon: LayoutDashboard, group: 'Pilotage' },
-  { id: 'reports', label: 'Rapports', icon: BarChart3, group: 'Pilotage' },
+  { id: 'dashboard', icon: LayoutDashboard, group: 'Pilotage' },
+  { id: 'reports', icon: BarChart3, group: 'Pilotage' },
 
-  { id: 'users', label: 'Utilisateurs', icon: Users, group: 'Gestion' },
-  { id: 'suppliers', label: 'Fournisseurs', icon: Truck, group: 'Gestion' },
-  { id: 'catalog', label: 'Catalogue', icon: Package, group: 'Gestion' },
-  { id: 'stock', label: 'Stocks', icon: Boxes, group: 'Gestion' },
-  { id: 'reservations', label: 'Réservations', icon: ShoppingBag, group: 'Gestion' },
+  { id: 'users', icon: Users, group: 'Gestion' },
+  { id: 'suppliers', icon: Truck, group: 'Gestion' },
+  { id: 'catalog', icon: Package, group: 'Gestion' },
+  { id: 'stock', icon: Boxes, group: 'Gestion' },
+  { id: 'reservations', icon: ShoppingBag, group: 'Gestion' },
 
-  { id: 'payments', label: 'Paiements', icon: CreditCard, group: 'Opérations' },
-  { id: 'cms', label: 'CMS', icon: FileText, group: 'Opérations' },
-  { id: 'settings', label: 'Configuration', icon: Settings, group: 'Opérations' },
+  { id: 'payments', icon: CreditCard, group: 'Opérations' },
+  { id: 'cms', icon: FileText, group: 'Opérations' },
+  { id: 'settings', icon: Settings, group: 'Opérations' },
 ] as const;
 
 export function AdminLayout({ children, title, subtitle }: { children: ReactNode; title: string; subtitle?: string }) {
   const { adminPage, setAdminPage, user, dark, toggleDark } = useApp();
+  const { t, i18n } = useTranslation();
 
-  // Group menus
+  // Group menus using translated group titles
   const groups = MENUS.reduce<Record<string, typeof MENUS[number][]>>((acc, m) => {
-    if (!acc[m.group]) acc[m.group] = [];
-    acc[m.group].push(m);
+    const groupKey = `menu.groups.${m.group.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "")}`;
+    const groupLabel = t(groupKey, m.group);
+    if (!acc[groupLabel]) acc[groupLabel] = [];
+    acc[groupLabel].push(m);
     return acc;
   }, {});
 
@@ -42,6 +47,7 @@ export function AdminLayout({ children, title, subtitle }: { children: ReactNode
               <div className="space-y-0.5">
                 {items.map((m) => {
                   const Icon = m.icon;
+                  const menuLabel = t(`menu.${m.id}`, m.id);
                   return (
                     <button
                       key={m.id}
@@ -49,7 +55,7 @@ export function AdminLayout({ children, title, subtitle }: { children: ReactNode
                       className={`menu-link w-full ${adminPage === m.id ? 'active' : ''}`}
                     >
                       <Icon className="h-4 w-4" />
-                      <span className="flex-1 text-left">{m.label}</span>
+                      <span className="flex-1 text-left">{menuLabel}</span>
                     </button>
                   );
                 })}
@@ -64,7 +70,7 @@ export function AdminLayout({ children, title, subtitle }: { children: ReactNode
             </div>
             <div className="flex-1 min-w-0">
               <div className="truncate text-xs font-semibold text-slate-900 dark:text-white">{user?.name}</div>
-              <div className="truncate text-[10px] text-slate-500">Administrateur</div>
+              <div className="truncate text-[10px] text-slate-500">{t('header.admin')}</div>
             </div>
             <ChevronDown className="h-4 w-4 text-slate-400" />
           </div>
@@ -78,13 +84,38 @@ export function AdminLayout({ children, title, subtitle }: { children: ReactNode
             <h1 className="text-base font-bold text-slate-900 dark:text-white">{title}</h1>
             {subtitle && <p className="text-xs text-slate-500">{subtitle}</p>}
           </div>
-          <div className="hidden flex-1 max-w-md md:block">
+          <div className="hidden flex-1 max-w-sm md:block">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
-              <input type="text" placeholder="Rechercher…" className="input-base pl-9" />
+              <input type="text" placeholder={t('header.searchPlaceholder')} className="input-base pl-9" />
             </div>
           </div>
-          <button onClick={toggleDark} className="btn-ghost !p-2" title="Thème">
+          
+          {/* Premium Language Switcher */}
+          <div className="flex bg-slate-100 dark:bg-slate-800 rounded-lg p-0.5 gap-0.5 text-xs font-semibold">
+            <button
+              onClick={() => changeLanguage('fr')}
+              className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                i18n.language.startsWith('fr')
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              }`}
+            >
+              FR
+            </button>
+            <button
+              onClick={() => changeLanguage('en')}
+              className={`px-2.5 py-1 rounded-md transition-all cursor-pointer ${
+                i18n.language.startsWith('en')
+                  ? 'bg-white dark:bg-slate-700 text-indigo-600 dark:text-indigo-400 shadow-sm'
+                  : 'text-slate-500 hover:text-slate-700 dark:hover:text-slate-300'
+              }`}
+            >
+              EN
+            </button>
+          </div>
+
+          <button onClick={toggleDark} className="btn-ghost !p-2" title={t('header.theme')}>
             {dark ? '☀️' : '🌙'}
           </button>
           <button className="btn-ghost !p-2 relative">

@@ -1,0 +1,319 @@
+{
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "search": "Search…",
+    "loading": "Loading...",
+    "action": "Action",
+    "status": "Status",
+    "date": "Date",
+    "edit": "Edit",
+    "delete": "Delete",
+    "details": "Details",
+    "close": "Close",
+    "back": "Previous",
+    "next": "Next",
+    "currency": "XAF"
+  },
+  "menu": {
+    "groups": {
+      "pilotage": "Monitoring",
+      "gestion": "Management",
+      "operations": "Operations"
+    },
+    "dashboard": "Dashboard",
+    "reports": "Reports",
+    "users": "Users",
+    "suppliers": "Suppliers",
+    "catalog": "Catalog",
+    "stock": "Stock",
+    "reservations": "Reservations",
+    "payments": "Payments",
+    "cms": "CMS",
+    "settings": "Settings"
+  },
+  "header": {
+    "searchPlaceholder": "Search…",
+    "theme": "Theme",
+    "admin": "Administrator"
+  },
+  "login": {
+    "title": "AutoParts",
+    "subtitle": "Administration Dashboard",
+    "emailLabel": "Email Address",
+    "emailPlaceholder": "admin@autoparts.cm",
+    "passwordLabel": "Password",
+    "forgotPassword": "Forgot?",
+    "submitBtn": "Sign In to Dashboard",
+    "loading": "Signing in...",
+    "copyright": "© 2026 AutoParts Connect. All rights reserved."
+  },
+  "meta": {
+    "dashboard": {
+      "title": "Dashboard",
+      "subtitle": "Platform overview"
+    },
+    "users": {
+      "title": "Users",
+      "subtitle": "8,421 customer and admin accounts"
+    },
+    "suppliers": {
+      "title": "Suppliers",
+      "subtitle": "20 validated partners"
+    },
+    "catalog": {
+      "title": "Catalog",
+      "subtitle": "5,000+ referenced parts"
+    },
+    "stock": {
+      "title": "Stock",
+      "subtitle": "Real-time inventory tracking"
+    },
+    "reservations": {
+      "title": "Reservations",
+      "subtitle": "2,154 active orders"
+    },
+    "payments": {
+      "title": "Payments",
+      "subtitle": "Transactions and settlements"
+    },
+    "cms": {
+      "title": "CMS",
+      "subtitle": "Content management"
+    },
+    "reports": {
+      "title": "Reports",
+      "subtitle": "Analytics and exports"
+    },
+    "settings": {
+      "title": "Settings",
+      "subtitle": "Platform configuration"
+    }
+  },
+  "dashboard": {
+    "stats": {
+      "revenue": "Revenue",
+      "reservations": "Reservations",
+      "activeUsers": "Active Users",
+      "partsSold": "Parts Sold"
+    },
+    "revenueEvolution": {
+      "title": "Revenue Evolution",
+      "subtitle": "Last 12 months · Millions XAF"
+    },
+    "topCategories": {
+      "title": "Top Categories",
+      "subtitle": "Parts distribution"
+    },
+    "reservationsByBrand": {
+      "title": "Reservations by Brand",
+      "subtitle": "Monthly volume"
+    },
+    "topSuppliers": {
+      "title": "Top Suppliers",
+      "subtitle": "By performance",
+      "productsCount": "products"
+    },
+    "recentReservations": {
+      "title": "Recent Reservations",
+      "seeAll": "See all"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "lowStock": "Low Stock",
+      "lowStockDesc": "12 products to restock",
+      "pendingOrders": "Pending Orders",
+      "pendingOrdersDesc": "24 reservations to validate",
+      "newUsers": "New Users",
+      "newUsersDesc": "47 signups today"
+    }
+  },
+  "users": {
+    "title": "Users List",
+    "addBtn": "Add User",
+    "searchPlaceholder": "Search user...",
+    "table": {
+      "name": "Name",
+      "role": "Role",
+      "status": "Status",
+      "joined": "Registration Date"
+    }
+  },
+  "suppliers": {
+    "title": "Suppliers List",
+    "addBtn": "Add Supplier",
+    "searchPlaceholder": "Search supplier...",
+    "table": {
+      "name": "Name",
+      "location": "Location",
+      "rating": "Rating",
+      "products": "Products"
+    }
+  },
+  "catalog": {
+    "title": "Spare Parts List",
+    "addBtn": "Add Part",
+    "exportBtn": "Export 5000 parts",
+    "searchPlaceholder": "Search part...",
+    "table": {
+      "ref": "Reference",
+      "name": "Description",
+      "category": "Category",
+      "compatibility": "Compatibility",
+      "price": "Price",
+      "stock": "Stock",
+      "supplier": "Supplier"
+    },
+    "addModal": {
+      "title": "Add a Part to Catalog",
+      "steps": {
+        "basic": "Basic Information",
+        "pricing": "Price & Stock",
+        "details": "Description & Details"
+      },
+      "form": {
+        "partName": "Part Name",
+        "reference": "Reference",
+        "referenceAuto": "Generate automatically",
+        "brand": "Brand",
+        "selectBrand": "Select brand",
+        "compat": "Compatible Model",
+        "category": "Category",
+        "selectCategory": "Select category",
+        "price": "Price (XAF)",
+        "stockQty": "Stock Quantity",
+        "supplier": "Supplier",
+        "selectSupplier": "Select supplier",
+        "description": "Part Description",
+        "specs": "Technical specifications (optional)",
+        "specsPlaceholder": "Ex: Thread: M14x1.5, Length: 120mm..."
+      },
+      "validation": {
+        "nameReq": "Part name is required",
+        "brandReq": "Brand is required",
+        "categoryReq": "Category is required",
+        "priceMin": "Price must be greater than 0",
+        "stockMin": "Quantity must be greater than or equal to 0",
+        "supplierReq": "Supplier is required"
+      },
+      "successTitle": "Part Added!",
+      "successMessage": "The part has been successfully added to the catalog.",
+      "submitBtn": "Confirm and Add"
+    },
+    "exportModal": {
+      "title": "Data Export Center",
+      "subtitle": "Choose the export format for the 5,000 parts currently referenced.",
+      "formats": {
+        "csv": {
+          "title": "CSV (Standard Excel)",
+          "desc": "Ideal for database imports or lightweight spreadsheets."
+        },
+        "xlsx": {
+          "title": "Excel (.xlsx)",
+          "desc": "Native workbook format with styles, perfect for financial analysis."
+        },
+        "pdf": {
+          "title": "PDF Document (.pdf)",
+          "desc": "Print-ready document with formatted table and professional header."
+        }
+      },
+      "status": {
+        "generating": "Generating file...",
+        "success": "Download successful!",
+        "error": "An error occurred during export."
+      },
+      "download": "Download File"
+    }
+  },
+  "stock": {
+    "title": "Inventory Management",
+    "updateBtn": "Update Stock",
+    "searchPlaceholder": "Filter by reference or description...",
+    "table": {
+      "ref": "Reference",
+      "name": "Part Name",
+      "location": "Location",
+      "status": "State"
+    }
+  },
+  "reservations": {
+    "title": "Order Tracking",
+    "searchPlaceholder": "Search reference or client...",
+    "table": {
+      "ref": "Ref",
+      "client": "Client",
+      "part": "Part",
+      "amount": "Amount"
+    }
+  },
+  "payments": {
+    "title": "Transactions & Settlements",
+    "stats": {
+      "total": "Total Volume",
+      "transactions": "Transactions",
+      "pending": "Pending",
+      "refunds": "Refunds"
+    },
+    "chartTitle": "Payment Volume (Last 7 Days)",
+    "methods": {
+      "momo": "Mobile Money",
+      "card": "Credit Card",
+      "cod": "Cash on Delivery"
+    }
+  },
+  "cms": {
+    "title": "Content Management",
+    "status": {
+      "published": "Published",
+      "draft": "Draft"
+    },
+    "actions": {
+      "edit": "Edit",
+      "preview": "Preview"
+    },
+    "newContent": {
+      "title": "Create New Content",
+      "titlePlaceholder": "Content Title",
+      "descPlaceholder": "Description...",
+      "draft": "Draft",
+      "publish": "Publish"
+    }
+  },
+  "reports": {
+    "title": "Available Reports",
+    "subtitle": "Generate detailed reports on your activity",
+    "sales": {
+      "title": "Sales Report",
+      "desc": "Details by period, category, supplier"
+    },
+    "users": {
+      "title": "Users Report",
+      "desc": "Registrations, activity, behavior"
+    },
+    "inventory": {
+      "title": "Inventory Report",
+      "desc": "Stock, movements, valuations"
+    },
+    "financial": {
+      "title": "Financial Report",
+      "desc": "Revenues, commissions, taxes"
+    }
+  },
+  "settings": {
+    "title": "General Settings",
+    "platformName": "Platform Name",
+    "contactEmail": "Contact Email",
+    "currency": "Currency",
+    "timezone": "Timezone",
+    "security": {
+      "title": "Security & API",
+      "twoFactor": "Two-factor Authentication",
+      "twoFactorDesc": "SMS OTP for all admins",
+      "rateLimit": "API Rate Limiting",
+      "rateLimitDesc": "100 req/min per user",
+      "auditLogs": "Audit Logs",
+      "auditLogsDesc": "All sensitive actions are traced",
+      "enabled": "Enabled"
+    }
+  }
+}

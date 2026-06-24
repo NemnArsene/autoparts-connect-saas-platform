@@ -10,6 +10,7 @@ import { PartCard } from '../../src/components/PartCard';
 import { TopHeader } from '../../src/components/TopHeader';
 import { TechnicianBanner } from '../../src/components/TechnicianBanner';
 import { useTranslation } from 'react-i18next';
+import { LinearGradient as ExpoLinearGradient } from 'expo-linear-gradient';
 
 const FEATURED_PARTS = PARTS.filter((p) => p.isNew).slice(0, 8);
 const POPULAR_PARTS = PARTS.filter((p) => p.rating >= 4.5).slice(0, 8);
@@ -273,6 +274,22 @@ export default function HomeScreen() {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+
+      {/* Floating SOS button */}
+      <TouchableOpacity
+        style={styles.floatingSosBtn}
+        onPress={() => router.push('/sos-technician')}
+        activeOpacity={0.85}
+      >
+        <ExpoLinearGradient
+          colors={['#DC2626', '#B91C1C']}
+          style={styles.floatingSosGradient}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+        >
+          <Text style={styles.floatingSosText}>🆘 SOS</Text>
+        </ExpoLinearGradient>
+      </TouchableOpacity>
     </View>
   );
 }
@@ -618,5 +635,29 @@ const styles = StyleSheet.create({
     color: '#374151',
     marginTop: 8,
     textAlign: 'center',
+  },
+  floatingSosBtn: {
+    position: 'absolute',
+    bottom: 24,
+    right: 20,
+    borderRadius: 28,
+    boxShadow: '0px 8px 24px rgba(220, 38, 38, 0.4)',
+    elevation: 8,
+    zIndex: 999,
+  },
+  floatingSosGradient: {
+    paddingHorizontal: 18,
+    paddingVertical: 14,
+    borderRadius: 28,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 6,
+  },
+  floatingSosText: {
+    color: '#FFF',
+    fontSize: 14,
+    fontFamily: 'Inter-Bold',
+    letterSpacing: 0.5,
   },
 });

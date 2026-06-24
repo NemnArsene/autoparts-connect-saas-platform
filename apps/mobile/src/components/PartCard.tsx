@@ -1,9 +1,10 @@
-import { View, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, TouchableOpacity, Image, Linking } from 'react-native';
 import { Text, useTheme, IconButton } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Svg, { G, Circle, Path } from 'react-native-svg';
 import { formatPrice } from '@autoparts/models';
 import type { Part } from '@autoparts/models';
+import { getPartImage } from './partImages';
 
 interface PartCardProps {
   part: Part;
@@ -18,6 +19,13 @@ interface PartCardProps {
 export function PartCard({ part, onPress, isFav, onFav, onAdd, compact, fullWidth }: PartCardProps) {
   const theme = useTheme();
 
+  const openWhatsApp = () => {
+    const priceStr = formatPrice(part.price);
+    const msg = `Bonjour VizuParts, je veux ${part.name} à ${priceStr}`;
+    const url = `https://wa.me/237696567184?text=${encodeURIComponent(msg)}`;
+    Linking.openURL(url);
+  };
+
   return (
     <TouchableOpacity
       activeOpacity={0.8}
@@ -30,16 +38,24 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact, fullWidt
       ]}
     >
       <View style={[styles.imageContainer, compact && styles.compactImageContainer]}>
-        <View style={[styles.placeholderImage, { backgroundColor: '#ea580c' }]}>
-          <Svg viewBox="0 0 100 100" width={56} height={56}>
-            <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
-              <Circle cx="50" cy="50" r="26" />
-              <Circle cx="50" cy="50" r="16" />
-              <Circle cx="50" cy="50" r="6" fill="white" />
-              <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
-            </G>
-          </Svg>
-        </View>
+        {getPartImage(part.name) ? (
+          <Image
+            source={getPartImage(part.name)}
+            style={styles.realImage}
+            resizeMode="cover"
+          />
+        ) : (
+          <View style={[styles.placeholderImage, { backgroundColor: '#ea580c' }]}>
+            <Svg viewBox="0 0 100 100" width={56} height={56}>
+              <G stroke="white" strokeWidth="2" fill="none" strokeLinecap="round">
+                <Circle cx="50" cy="50" r="26" />
+                <Circle cx="50" cy="50" r="16" />
+                <Circle cx="50" cy="50" r="6" fill="white" />
+                <Path d="M50 24 L50 18 M50 82 L50 76 M24 50 L18 50 M82 50 L76 50" strokeWidth="3" />
+              </G>
+            </Svg>
+          </View>
+        )}
 
         {part.isPromo && part.oldPrice && (
           <View style={[styles.badge, { backgroundColor: theme.colors.error }]}>
@@ -100,6 +116,16 @@ export function PartCard({ part, onPress, isFav, onFav, onAdd, compact, fullWidt
             />
           )}
         </View>
+
+        {/* WhatsApp Order Button */}
+        <TouchableOpacity
+          style={styles.whatsappBtn}
+          activeOpacity={0.85}
+          onPress={openWhatsApp}
+        >
+          <Icon name="whatsapp" size={14} color="#fff" />
+          <Text style={styles.whatsappBtnText}>Commander</Text>
+        </TouchableOpacity>
       </View>
     </TouchableOpacity>
   );
@@ -131,6 +157,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+  },
+  realImage: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+    backgroundColor: '#f8fafc',
   },
   badge: {
     position: 'absolute',
@@ -197,5 +229,20 @@ const styles = StyleSheet.create({
   },
   addButton: {
     margin: 0,
+  },
+  whatsappBtn: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#25D366',
+    borderRadius: 10,
+    paddingVertical: 7,
+    gap: 5,
+    marginTop: 6,
+  },
+  whatsappBtnText: {
+    color: '#fff',
+    fontSize: 11,
+    fontFamily: 'Inter-Bold',
   },
 });

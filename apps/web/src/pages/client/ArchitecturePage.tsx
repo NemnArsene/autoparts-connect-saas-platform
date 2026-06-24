@@ -3,7 +3,7 @@ import { Database, Server, Smartphone, Cloud, Shield, Zap, GitBranch, Layers, Co
 import { useApp } from '../../store/AppContext';
 
 export function ArchitecturePage() {
-  const { setView, setAdminPage } = useApp();
+  const { setAdminPage } = useApp();
   const [tab, setTab] = useState<'stack' | 'api' | 'ddd' | 'roadmap'>('stack');
 
   return (
@@ -54,7 +54,7 @@ export function ArchitecturePage() {
 
       {/* CTA Admin */}
       <button
-        onClick={() => { setView('admin'); setAdminPage('dashboard'); }}
+        onClick={() => { setAdminPage('dashboard'); }}
         className="card flex w-full items-center justify-between p-4 text-left transition hover:shadow-md"
       >
         <div>

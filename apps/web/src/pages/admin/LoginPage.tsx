@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useApp } from '../../store/AppContext';
+import { useTranslation } from 'react-i18next';
 
 export function LoginPage() {
   const { login } = useApp();
+  const { t } = useTranslation();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -33,14 +35,14 @@ export function LoginPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4" />
               </svg>
             </div>
-            <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">AutoParts</h1>
-            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">Administration Dashboard</p>
+            <h1 className="text-3xl font-bold text-slate-900 dark:text-white tracking-tight mb-2">{t('login.title')}</h1>
+            <p className="text-slate-500 dark:text-slate-400 text-sm font-medium">{t('login.subtitle')}</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
             <div>
               <label className="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
-                Adresse Email
+                {t('login.emailLabel')}
               </label>
               <div className="relative">
                 <input
@@ -48,7 +50,7 @@ export function LoginPage() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   className="w-full pl-4 pr-10 py-3 bg-slate-50 dark:bg-slate-800/50 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-white focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all outline-none"
-                  placeholder="admin@autoparts.ci"
+                  placeholder={t('login.emailPlaceholder')}
                   required
                 />
                 <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none text-slate-400">
@@ -62,10 +64,10 @@ export function LoginPage() {
             <div>
               <div className="flex items-center justify-between mb-2">
                 <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
-                  Mot de passe
+                  {t('login.passwordLabel')}
                 </label>
                 <a href="#" className="text-xs font-medium text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors">
-                  Oublié ?
+                  {t('login.forgotPassword')}
                 </a>
               </div>
               <div className="relative">
@@ -96,7 +98,7 @@ export function LoginPage() {
                   <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
               ) : (
-                'Connexion au tableau de bord'
+                t('login.submitBtn')
               )}
             </button>
           </form>
@@ -104,7 +106,7 @@ export function LoginPage() {
         </div>
         
         <p className="text-center text-slate-500 dark:text-slate-400 text-sm mt-8">
-          © 2026 AutoParts Connect. Tous droits réservés.
+          {t('login.copyright')}
         </p>
       </div>
     </div>

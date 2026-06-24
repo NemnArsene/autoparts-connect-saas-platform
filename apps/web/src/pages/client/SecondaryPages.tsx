@@ -1,14 +1,14 @@
 import { useState } from 'react';
-import { Package, Bell, ShoppingCart, X, Check, Tag, Clock, Plus, Minus, ArrowRight, CreditCard, Smartphone, Wallet, User as UserIcon, Car as CarIcon, Heart, HelpCircle, Edit3, Camera, Phone, Mail, MapPin, Eye } from 'lucide-react';
+import { Package, Bell, ShoppingCart, X, Check, Tag, Clock, Plus, Minus, ArrowRight, CreditCard, Smartphone, Wallet, User as UserIcon, Car as CarIcon, Heart, HelpCircle, Edit3, Camera, Phone, Mail, MapPin, Eye, AlertTriangle, PhoneCall } from 'lucide-react';
 import { useApp } from '../../store/AppContext';
 import { formatPrice, relativeDate, RESERVATIONS, NOTIFICATIONS, VEHICLES, PARTS } from '../../data/seed';
 import { StatusBadge } from '../../components/Shared';
 import { PartImage } from '../../components/PartImage';
+import { WhatsAppIcon } from './HomePage';
 
 // ===================== RESERVATIONS =====================
 export function ReservationsPage() {
   const { myReservations, setClientPage, setSelectedPart } = useApp();
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [tab, setTab] = useState<'all' | 'pending' | 'confirmed' | 'completed'>('all');
 
   const list = tab === 'all' ? myReservations : myReservations.filter((r) => r.status === tab);
@@ -285,7 +285,7 @@ export function CheckoutPage() {
         <h2 className="text-sm font-bold text-slate-900 dark:text-white mb-3">Mode de paiement</h2>
         <div className="space-y-2">
           {[
-            { id: 'mobile', label: 'Mobile Money', desc: 'Orange, MTN, Moov, Wave', icon: Smartphone },
+            { id: 'mobile', label: 'Mobile Money', desc: 'Orange Money, MTN MoMo', icon: Smartphone },
             { id: 'card', label: 'Carte bancaire', desc: 'Visa, Mastercard', icon: CreditCard },
             { id: 'cash', label: 'Paiement à la livraison', desc: 'Espèces à la réception', icon: Wallet },
           ].map((m) => {
@@ -333,7 +333,7 @@ export function CheckoutPage() {
           </div>
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-slate-400" />
-            <span className="text-slate-700 dark:text-slate-300">Abidjan, Côte d'Ivoire</span>
+            <span className="text-slate-700 dark:text-slate-300">Yaoundé / Douala, Cameroun 🇨🇲</span>
           </div>
         </div>
       </div>
@@ -353,7 +353,7 @@ export function ProfilePage() {
   return (
     <div className="space-y-4 animate-fade-in">
       <div className="card p-5 text-center">
-        <div className="relative mx-auto">
+        <div className="relative mx-auto" style={{ width: 'fit-content' }}>
           <div className="mx-auto flex h-20 w-20 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 text-2xl font-extrabold text-white shadow-lg">
             {user?.avatar}
           </div>
@@ -518,7 +518,11 @@ export function SettingsPage() {
         </button>
         <button className="flex w-full items-center justify-between p-4 text-left">
           <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Devise</span>
-          <span className="text-sm text-slate-500">XOF (FCFA)</span>
+          <span className="text-sm text-slate-500">XAF (FCFA)</span>
+        </button>
+        <button className="flex w-full items-center justify-between p-4 text-left">
+          <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Pays</span>
+          <span className="text-sm text-slate-500">🇨🇲 Cameroun</span>
         </button>
         <button className="flex w-full items-center justify-between p-4 text-left">
           <span className="text-sm font-medium text-slate-700 dark:text-slate-200">Politique de confidentialité</span>
@@ -535,18 +539,22 @@ export function SupportPage() {
     <div className="space-y-3 animate-fade-in">
       <div className="card bg-gradient-to-br from-indigo-600 to-violet-600 p-5 text-white">
         <h2 className="text-lg font-extrabold">Besoin d'aide ?</h2>
-        <p className="mt-1 text-sm opacity-90">Notre équipe est disponible 24/7</p>
+        <p className="mt-1 text-sm opacity-90">Autopart Connects — Support disponible 24/7</p>
       </div>
       <div className="card divide-y divide-slate-200 dark:divide-slate-800">
         {[
-          { icon: Phone, label: 'Appeler le support', desc: '+225 27 22 49 30 00' },
-          { icon: Mail, label: 'Email', desc: 'support@autoparts-connect.ci' },
-          { icon: HelpCircle, label: 'Centre d\'aide', desc: 'FAQ et guides' },
-          { icon: Bell, label: 'Signaler un problème', desc: 'Formulaire de contact' },
+          { icon: Phone, label: 'Appeler le support', desc: '+237 696 567 184', href: 'tel:+237696567184' },
+          { icon: Mail, label: 'Email', desc: 'support@autopart-connects.cm', href: 'mailto:support@autopart-connects.cm' },
+          { icon: HelpCircle, label: 'Centre d\'aide', desc: 'FAQ et guides', href: undefined },
+          { icon: Bell, label: 'Signaler un problème', desc: 'Formulaire de contact', href: undefined },
         ].map((it) => {
           const Icon = it.icon;
           return (
-            <button key={it.label} className="flex w-full items-center gap-3 p-4 text-left">
+            <button
+              key={it.label}
+              onClick={() => it.href && (window.location.href = it.href)}
+              className="flex w-full items-center gap-3 p-4 text-left"
+            >
               <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
                 <Icon className="h-5 w-5 text-indigo-600" />
               </div>
@@ -558,6 +566,77 @@ export function SupportPage() {
           );
         })}
       </div>
+
+      {/* SOS Technicien intégré dans le support aussi */}
+      <SOSTechnicianCard />
+    </div>
+  );
+}
+
+// ===================== SOS TECHNICIEN CARD =====================
+// (intégrée dans support + exportée pour usage global)
+export function SOSTechnicianCard() {
+  const [open, setOpen] = useState(false);
+
+  const technicians = [
+    { name: 'Technicien 1', number: '699591116', display: '+237 699 591 116' },
+    { name: 'Technicien 2', number: '694241391', display: '+237 694 241 391' },
+    { name: 'Coordinateur', number: '696567184', display: '+237 696 567 184' },
+  ];
+
+  return (
+    <div className="card overflow-hidden border-2 border-red-200 dark:border-red-500/30">
+      <button
+        onClick={() => setOpen(!open)}
+        className="flex w-full items-center gap-3 p-4 text-left"
+      >
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-red-500 to-rose-600 text-white shadow-lg shadow-red-500/30 animate-pulse">
+          <AlertTriangle className="h-6 w-6" />
+        </div>
+        <div className="flex-1">
+          <div className="text-sm font-extrabold text-red-600 dark:text-red-400">🚨 SOS Technicien</div>
+          <div className="text-xs text-slate-500">Dépannage urgent — déplacement immédiat</div>
+        </div>
+        <PhoneCall className="h-5 w-5 text-red-500" />
+      </button>
+
+      {open && (
+        <div className="border-t border-slate-200 dark:border-slate-800 px-4 pb-4 pt-3 space-y-2 animate-slide-up">
+          <p className="text-xs text-slate-500 mb-3">Contactez directement un technicien agréé Autopart Connects qui peut se déplacer en urgence :</p>
+          {technicians.map((tech) => (
+            <div key={tech.number} className="rounded-xl border border-slate-200 dark:border-slate-700 p-3">
+              <div className="mb-2 flex items-center gap-2">
+                <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 text-xs font-bold text-white">
+                  {tech.name[0]}
+                </div>
+                <div>
+                  <div className="text-xs font-bold text-slate-900 dark:text-white">{tech.name}</div>
+                  <div className="text-[11px] font-mono text-slate-500">{tech.display}</div>
+                </div>
+              </div>
+              <div className="flex gap-2">
+                {/* Appel normal */}
+                <a
+                  href={`tel:+237${tech.number}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 py-2 text-xs font-semibold text-slate-700 dark:text-slate-200 transition hover:bg-slate-200 dark:hover:bg-slate-700"
+                >
+                  <Phone className="h-3.5 w-3.5" />
+                  Appeler
+                </a>
+                {/* WhatsApp — même fenêtre */}
+                <a
+                  href={`https://wa.me/237${tech.number}?text=${encodeURIComponent('Bonjour, j\'ai besoin d\'un technicien en urgence. Je suis client Autopart Connects.')}`}
+                  className="flex flex-1 items-center justify-center gap-1.5 rounded-lg py-2 text-xs font-bold text-white transition hover:brightness-110"
+                  style={{ backgroundColor: '#25D366' }}
+                >
+                  <WhatsAppIcon className="h-3.5 w-3.5" />
+                  WhatsApp
+                </a>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

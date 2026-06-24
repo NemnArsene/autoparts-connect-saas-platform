@@ -9,8 +9,8 @@ import { TopHeader } from '../../src/components/TopHeader';
 
 const PAYMENT_METHODS = [
   { key: 'mobile_money', label: 'Mobile Money', sub: 'Orange, MTN, Moov, Wave', icon: 'cellphone' },
-  { key: 'card',         label: 'Carte bancaire', sub: 'Visa, Mastercard',       icon: 'credit-card-outline' },
-  { key: 'cash',         label: 'Paiement à la livraison', sub: 'Espèces à la réception', icon: 'cash' },
+  { key: 'card', label: 'Carte bancaire', sub: 'Visa, Mastercard', icon: 'credit-card-outline' },
+  { key: 'cash', label: 'Paiement à la livraison', sub: 'Espèces à la réception', icon: 'cash' },
 ];
 
 export default function CheckoutScreen() {
@@ -111,17 +111,17 @@ export default function CheckoutScreen() {
 
           <View style={styles.contactRow}>
             <Icon name="phone-outline" size={20} color="#94a3b8" style={styles.contactIcon} />
-            <Text style={styles.contactText}>{user?.phone || '+225 00 00 00 00 00'}</Text>
+            <Text style={styles.contactText}>{user?.phone || '+237 60 00 00 00 00'}</Text>
           </View>
 
           <View style={styles.contactRow}>
             <Icon name="email-outline" size={20} color="#94a3b8" style={styles.contactIcon} />
-            <Text style={styles.contactText}>{user?.email || 'email@autoparts.ci'}</Text>
+            <Text style={styles.contactText}>{user?.email || 'email@autoparts.cm'}</Text>
           </View>
 
           <View style={styles.contactRow}>
             <Icon name="map-marker-outline" size={20} color="#94a3b8" style={styles.contactIcon} />
-            <Text style={styles.contactText}>{user?.city || 'Abidjan, Côte d\'Ivoire'}</Text>
+            <Text style={styles.contactText}>{user?.city || 'Douala, Cameroun'}</Text>
           </View>
         </View>
 

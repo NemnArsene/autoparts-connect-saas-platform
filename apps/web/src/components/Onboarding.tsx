@@ -8,7 +8,7 @@ import { Logo } from './Logo';
 // Explique les 2 applications et le concept PWA + Offline
 // =========================================================
 export function Onboarding() {
-  const { setView, setClientPage, setAdminPage } = useApp();
+  const { setClientPage, setAdminPage } = useApp();
   const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
 
@@ -41,7 +41,7 @@ export function Onboarding() {
     {
       icon: <LayoutDashboard className="h-12 w-12 text-slate-800" />,
       title: 'Backoffice Administration',
-      desc: 'Pilotez l\'ensemble de la plateforme : utilisateurs, fournisseurs, stocks, statistiques, paiements et CMS.',
+      desc: 'Pilotez l\'ensemble de la plateforme : utilisateurs, fournisseurs, stocks, statistiques,  et CMS.',
       cta: 'Voir l\'admin',
     },
     {
@@ -96,7 +96,7 @@ export function Onboarding() {
           {step === slides.length - 1 && (
             <div className="mb-5 space-y-2">
               <button
-                onClick={() => { close(); setView('client'); setClientPage('home'); }}
+                onClick={() => { close(); setClientPage('home'); }}
                 className="flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-indigo-600 to-violet-600 p-4 text-white shadow-lg shadow-indigo-500/30 transition hover:shadow-xl"
               >
                 <div className="flex items-center gap-3">
@@ -109,7 +109,7 @@ export function Onboarding() {
                 <ChevronRight className="h-5 w-5" />
               </button>
               <button
-                onClick={() => { close(); setView('admin'); setAdminPage('dashboard'); }}
+                onClick={() => { close(); setAdminPage('dashboard'); }}
                 className="flex w-full items-center justify-between rounded-2xl bg-gradient-to-r from-slate-800 to-slate-900 p-4 text-white shadow-lg transition hover:shadow-xl"
               >
                 <div className="flex items-center gap-3">
@@ -177,13 +177,13 @@ export function PWAInstallBanner() {
             <div className="text-xs font-bold text-slate-900 dark:text-white">Installer l'app</div>
             <p className="text-[11px] text-slate-500">Ajoutez AutoParts Connect à votre écran d'accueil pour un accès rapide et hors-ligne.</p>
           </div>
-          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint','1'); }} className="text-slate-400 hover:text-slate-600">
+          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint', '1'); }} className="text-slate-400 hover:text-slate-600">
             <X className="h-4 w-4" />
           </button>
         </div>
         <div className="mt-2 flex gap-1">
-          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint','1'); }} className="btn-ghost flex-1 text-xs">Plus tard</button>
-          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint','1'); }} className="btn-primary flex-1 text-xs">Installer</button>
+          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint', '1'); }} className="btn-ghost flex-1 text-xs">Plus tard</button>
+          <button onClick={() => { setShow(false); localStorage.setItem('apc-pwa-hint', '1'); }} className="btn-primary flex-1 text-xs">Installer</button>
         </div>
       </div>
     </div>

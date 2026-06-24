@@ -47,9 +47,9 @@
     }
   },
   "common": {
-    "appName": "ASPS",
-    "appTitle": "System for Reserving",
-    "appSubtitle": "Car Spare Parts (ASPS)",
+    "appName": "Autopart Connect",
+    "appTitle": "Autopart Connect",
+    "appSubtitle": "System for Reserving",
     "seeAll": "Tout voir",
     "manage": "Gérer",
     "loading": "Chargement...",
@@ -65,7 +65,7 @@
   },
   "login": {
     "welcome": "Bienvenue",
-    "subtitle": "Connectez-vous pour continuer vers ASPS",
+    "subtitle": "Connectez-vous pour continuer vers Autopart Connect",
     "email": "Adresse e-mail",
     "emailPlaceholder": "votre@email.com",
     "password": "Mot de passe",
@@ -77,7 +77,7 @@
   },
   "register": {
     "title": "Créer un compte",
-    "subtitle": "Rejoignez System for Reserving Car Spare Parts",
+    "subtitle": "Rejoignez Autopart Connect",
     "fullName": "Nom complet",
     "fullNamePlaceholder": "Jean Dupont",
     "email": "Adresse e-mail",
@@ -211,7 +211,7 @@
     "faq3Q": "Puis-je annuler une réservation ?",
     "faq3A": "Oui, vous pouvez annuler une réservation tant qu'elle n'a pas été retirée. Rendez-vous dans votre historique de réservations pour gérer vos commandes.",
     "faq4Q": "Comment devenir fournisseur ?",
-    "faq4A": "Contactez notre équipe via le formulaire ci-dessous ou par e-mail à partners@autoparts-connect.ci pour démarrer votre processus d'inscription.",
+    "faq4A": "Contactez notre équipe via le formulaire ci-dessous ou par e-mail à partners@autoparts-connect.cm pour démarrer votre processus d'inscription.",
     "faq5Q": "Quels modes de paiement sont acceptés ?",
     "faq5A": "Nous acceptons Mobile Money (Orange Money, MTN MoMo), les virements bancaires et les paiements en espèces au moment du retrait.",
     "legal": "Informations légales",
@@ -220,6 +220,17 @@
     "aboutApp": "À propos de l'application"
   },
   "technician": {
+    "sos": {
+      "title": "SOS Technicien d'Urgence",
+      "subtitle": "Un problème sur la route ? Nos experts interviennent immédiatement.",
+      "call": "Appel Normal",
+      "whatsapp": "Message WhatsApp",
+      "contactModalTitle": "Contacter {{name}}",
+      "contactModalSub": "Choisissez le moyen de contact préféré pour ce technicien d'urgence.",
+      "chouibouSpec": "Expert en filtration et électricité d'urgence",
+      "mohamedSpec": "Spécialiste pannes moteur et transmission",
+      "axelSpec": "Expert freinage, suspension et diagnostic rapide"
+    },
     "title": "Contacter un technicien",
     "bannerTitle": "Besoin d'un technicien ?",
     "bannerSub": "Contactez un expert auto directement depuis l'application",
@@ -234,10 +245,9 @@
     "stepSub3": "Décrivez le problème rencontré",
     "stepTitle4": "Lieu de rendez-vous",
     "stepSub4": "Où souhaitez-vous le rendez-vous ?",
-    "stepTitle5": "Localisation",
     "stepSub5": "Envoyez votre position au technicien",
-    "selectOrType": "Sélectionnez ou saisissez librement",
-    "other": "Autre (saisie libre)",
+    "selectOrType": "Sélectionner ou saisir librement",
+    "other": "Autre (texte libre)",
     "technicianLabel": "Technicien",
     "technicianPlaceholder": "Nom du technicien",
     "selectTechnician": "Sélectionner un technicien",
@@ -254,7 +264,7 @@
     "currentLocation": "Ma position actuelle",
     "useMyLocation": "Utiliser ma position",
     "locationShared": "Position partagée",
-    "additionalNotes": "Notes supplémentaires",
+    "additionalNotes": "Notes additionnelles",
     "notesPlaceholder": "Décrivez votre problème en détail...",
     "next": "Suivant",
     "back": "Retour",
@@ -280,11 +290,11 @@
     },
     "problems": {
       "brake": "Problème de frein",
-      "engine": "Problème moteur",
+      "engine": "Problème de moteur",
       "electrical": "Problème électrique",
       "suspension": "Problème de suspension",
       "transmission": "Problème de transmission",
-      "oil": "Vidange / Fuite d'huile",
+      "oil": "Vidange / Fuite",
       "tire": "Problème de pneu",
       "ac": "Climatisation",
       "bodywork": "Carrosserie",
@@ -298,7 +308,7 @@
       "roadside": "Bord de route"
     },
     "technicians": {
-      "tech1": "Jean Méké - Mécanicien généraliste",
+      "tech1": "Jean Méké - Mécanicien général",
       "tech2": "Paul Atangana - Spécialiste moteur",
       "tech3": "Marie Ngono - Électricienne auto",
       "tech4": "Pierre Fotso - Expert transmission",
@@ -310,7 +320,7 @@
     "sectionAppearance": "Apparence",
     "sectionNotifications": "Notifications",
     "sectionLanguage": "Langue & Région",
-    "sectionLegal": "Légal",
+    "sectionLegal": "Mentions légales",
     "darkMode": "Mode sombre",
     "pushNotif": "Notifications push",
     "emailNotif": "Notifications e-mail",
@@ -319,12 +329,12 @@
     "languageFr": "Français",
     "languageEn": "English",
     "currency": "Devise",
-    "currencyValue": "XOF (FCFA)",
+    "currencyValue": "XAF (FCFA)",
     "privacy": "Politique de confidentialité",
     "terms": "Conditions d'utilisation",
     "about": "À propos de l'application",
     "version": "Version",
-    "logout": "Se déconnecter",
-    "logoutConfirm": "Voulez-vous vraiment vous déconnecter ?"
+    "logout": "Déconnexion",
+    "logoutConfirm": "Êtes-vous sûr de vouloir vous déconnecter ?"
   }
 }

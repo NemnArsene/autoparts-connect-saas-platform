@@ -118,6 +118,13 @@ export const MoreModal: React.FC<MoreModalProps> = ({
 
   const menuItems: MoreMenuItem[] = [
     {
+      id: 'sos-technician',
+      label: t('technician.sos.title'),
+      subtitle: t('technician.sos.subtitle'),
+      icon: SupportIcon,
+      route: '/sos-technician',
+    },
+    {
       id: 'technician',
       label: t('technician.menuLabel'),
       subtitle: t('technician.menuSub'),
